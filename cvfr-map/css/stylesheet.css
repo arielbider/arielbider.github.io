@@ -1,1 +1,62 @@
+html, body {
+			height: 100%;
+			margin: 0;
+		}
+		#mapid {
+			width: 600px;
+			height: 400px;
+		}
+	
+	
+		.waypoint-icon {
+			width: 28px;
+		}
+		
+		body {
+			padding: 0;
+			margin: 0;
+		}
+		
+		#mapid {
+			height: 100%;
+			width: 100vw;
+		}
+		
+		.waypoint-name {
+			font-weight: bold;
+			width: 80px;
+			font-size: 16px;
+		}
+		
+		.waypoint-div{
+			
+		}
+		
+		.altitude-div {
+		  position: relative;
+		  text-align: center;
+		  color: white;
+		  width: 100%;
+		}
 
+		.altitude-text {
+		  position: absolute;
+		  top: 50%;
+		  left: 50%;
+		  transform: translate(-50%, -100%);
+		  color: black;
+		  font-family: Arial, sans-serif;
+		  font-size: 20px;
+		  font-weight: bold; 
+		}
+
+		.bearing {
+			color: rgb(176, 73, 144);
+			font-size: 16px;
+			font-weight: bold;
+		}
+		
+		.waypoint_popup{
+			direction: rtl;
+			text-align: center;
+		}

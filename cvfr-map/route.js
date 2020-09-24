@@ -141,14 +141,14 @@ function addAirportsToRoutePolyline() {
 function setAsDeparture(airport_code) {
     document.getElementById("departure").innerHTML = airport_code;
     validateAirport("departure");
-	updatePopup(airport_code);
+	updatePopup(airport_code, 1);
 }
 
 function setAsArrival(airport_code) {
     console.log(airport_code);
     document.getElementById("arrival").innerHTML = airport_code;
     validateAirport("arrival");
-	updatePopup(airport_code);
+	updatePopup(airport_code, 1);
 }
 
 function updatePopup(airport_code, if_airport) {

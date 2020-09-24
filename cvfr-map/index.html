@@ -31,9 +31,27 @@
 
 <body>
 
-<div id="mapid"></div>
+<div id="planner" class="planner" style="bottom: 75px;">
+	<div style="font-size: 20px; font-weight: bold;">
+		תוכנית טיסה
+	</div>
+	<div class="airport-text">
+		שדה המראה:
+		<div contenteditable="true" id="departure" class="airport" onkeyup="validateAirport(this.id)"></div>
+		<div id="validate-departure" class="airport_validate"></div>
+	</div>
+	<div class="airport-text">
+		שדה נחיתה:
+		<div contenteditable="true" id="arrival" class="airport" onkeyup="validateAirport(this.id)"></div>
+		<div id="validate-arrival" class="airport_validate"></div>
+	</div>
+	<div id="route" contenteditable="true"></div>
+</div>
 
-<script src="main.js"></script>
+<div id="mapid" draggable="false"></div>
+
+<script src="map.js"></script>
+<script src="route.js"></script>
 
 </body>
 </html>

@@ -1,0 +1,126 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+html, body, #mapid {
+    height: 100%;
+    width: 100vw;
+}
+
+.waypoint-icon {
+	width: 28px;
+}
+
+/* body {
+	padding: 0;
+	margin: 0;
+}
+
+#mapid {
+	position: absolute;
+	top: 20%;
+	bottom: 0;
+	width: 100%;
+}*/ 
+
+#route {
+	text-align: center;
+}
+
+.waypoint-name {
+	font-weight: bold;
+	width: 80px;
+	font-size: 16px;
+}
+
+.waypoint-div {}
+
+.altitude-div {
+	position: relative;
+	text-align: center;
+	color: white;
+	width: 100%;
+}
+
+.altitude-text {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -100%);
+	color: black;
+	font-family: Arial, sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.bearing {
+	color: rgb(176, 73, 144);
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.waypoint_popup {
+	direction: rtl;
+	text-align: center;
+}
+
+/* [contenteditable] {
+	outline: 0px solid transparent;
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
+
+.planner {
+	text-align: right;
+	direction: rtl;
+	font-family: 'Assistant', sans-serif;
+	width: 500px;
+	position: absolute;
+	right: 12px;
+	z-index: 999;
+	background-color: #fff;
+	padding: 5px 10px 10px 10px;
+	border: 1px solid #999;
+	line-height: 30px;
+	background-color: rgb(238, 238, 238);
+	cursor: pointer
+}
+
+@media only screen and (max-width: 576px) {
+  #planner {
+    width: 90%;
+	right: 0px;
+  }
+}
+
+.airport {
+	display: inline-block;
+	width: 100px;
+	background-color: white;
+	margin-top: 10px;
+	border: solid rgb(153, 153, 153);
+	border-radius: 4px;
+	border-width: 1px;
+	text-align: center;
+	direction: ltr;
+}
+
+#route {
+	direction: ltr;
+	width: 98%;
+	height: 120px;
+	margin: auto;
+	background-color: white;
+	outline: 1px solid black;
+	margin-top: 10px;
+}
+
+.airport_validate {
+    display: inline-block;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.marker-button{
+	margin: 5px;
+}

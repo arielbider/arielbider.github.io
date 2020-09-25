@@ -81,49 +81,46 @@ for (var waypoint_key in cvfr_waypoints) {
             })
         })
             .addTo(waypoints_switch_atc_layer);
-		curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 0)">הוסף לנתיב</button></div>`);
-	
-    }
-	else if (waypoint["סוג דיווח"] == "דרישה") {
+        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 0)">הוסף לנתיב</button></div>`);
+
+    } else if (waypoint["סוג דיווח"] == "דרישה") {
         curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
             icon: new L.DivIcon({
-                className: 'my-div-icon',
+                className: 'waypoint-div',
                 html: '<img class="waypoint-icon" src="map_pins/by_request.png"/>' +
                 '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
             })
         })
             .addTo(waypoints_by_request_layer);
-		curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 0)">הוסף לנתיב</button></div>`);
-	
-    }
-	else if (waypoint["סוג דיווח"] == "ARP") {
+        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 0)">הוסף לנתיב</button></div>`);
+
+    } else if (waypoint["סוג דיווח"] == "ARP") {
         curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
             icon: new L.DivIcon({
-                className: 'my-div-icon',
+                className: 'waypoint-div',
                 html: '<img class="waypoint-icon" src="map_pins/airport.png"/>' +
                 '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
             })
         })
-        .addTo(waypoints_by_request_layer);
-		curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 1)" class="marker-button">הוסף לנתיב</button><br><button type="button" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="marker-button">קבע כשדה המראה</button><br><button type="button" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="marker-button">קבע כשדה נחיתה</button></div>`);
-    }
-	else if (waypoint["סוג דיווח"] == "חובה") {
+            .addTo(waypoints_by_request_layer);
+        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 1)" class="marker-button">הוסף לנתיב</button><br><button type="button" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="marker-button">קבע כשדה המראה</button><br><button type="button" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="marker-button">קבע כשדה נחיתה</button></div>`);
+    } else if (waypoint["סוג דיווח"] == "חובה") {
         curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
             icon: new L.DivIcon({
-                className: 'my-div-icon',
+                className: 'waypoint-div',
                 html: '<img class="waypoint-icon" src="map_pins/must.png"/>' +
                 '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
             })
         })
             .addTo(waypoints_must_layer);
-		curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 0)">הוסף לנתיב</button></div>`);
-	
+        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 0)">הוסף לנתיב</button></div>`);
+
     };
-	
-	console.log(curr_marker.getPopup().getContent());
-	//if(curr_marker.getContent() != ""){
-	//	curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id)">הוסף לנתיב</button></div>`);
-	//}
+
+    console.log(curr_marker.getPopup().getContent());
+    //if(curr_marker.getContent() != ""){
+    //	curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id)">הוסף לנתיב</button></div>`);
+    //}
 };
 
 airways.forEach(function (airway) {
@@ -263,9 +260,9 @@ airways.forEach(function (airway) {
         var rotation_degree = angleFromCoordinate(start_point[0], start_point[1], end_point[0], end_point[1]);
         var html = "";
         if (rotation_degree < -90 || rotation_degree > 90) {
-            html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing" style="transform: rotate(180deg)">${bearing}</div><img src="map_pins/altitude_level.png" style="width: 75px"><div style="transform: rotate(180deg);"><div class="altitude-text" style="transform: translate(-50%, 10%);">${airway["to_altitude"]}</div></div>`;
+            html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing" style="transform: rotate(180deg)">${bearing}</div><img src="map_pins/altitude_level.png" style="width: 100%"><div style="transform: rotate(180deg);"><div class="altitude-text" style="transform: translate(-50%, 10%);">${airway["to_altitude"]}</div></div>`;
         } else {
-            html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/altitude_level.png" style="width: 75px"><div class="altitude-text">${airway["to_altitude"]}</div><div class="bearing">${bearing}<\div><\div>`;
+            html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/altitude_level.png" style="width: 100%"><div class="altitude-text">${airway["to_altitude"]}</div><div class="bearing">${bearing}<\div><\div>`;
 
         }
         return html;
@@ -275,8 +272,8 @@ airways.forEach(function (airway) {
         icon: new L.DivIcon({
             className: 'altitude-marker',
             html: altitude_html(),
-            iconSize: [100, 100],
-            iconAnchor: [50, 25]
+            iconSize: [76, 76],
+            iconAnchor: [38, 38]
         })
     }).bindPopup(`${airway["to_altitude"]}`)
     .addTo(altitude_pins_layer);
@@ -292,9 +289,9 @@ airways.forEach(function (airway) {
                 var rotation_degree = angleFromCoordinate(end_point[0], end_point[1], start_point[0], start_point[1]);
                 var html = "";
                 if (rotation_degree < -90 || rotation_degree > 90) {
-                    html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing" style="transform: rotate(180deg)">${bearing_opposite}</div><img src="map_pins/altitude_level.png" style="width: 75px"><div style="transform: rotate(180deg);"><div class="altitude-text" style="transform: translate(-50%, 10%);">${airway["from_altitude"]}</div></div>`;
+                    html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing" style="transform: rotate(180deg)">${bearing_opposite}</div><img src="map_pins/altitude_level.png" style="width: 100%"><div style="transform: rotate(180deg);"><div class="altitude-text" style="transform: translate(-50%, 10%);">${airway["from_altitude"]}</div></div>`;
                 } else {
-                    html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/altitude_level.png" style="width: 75px"><div class="altitude-text">${airway["from_altitude"]}</div><div class="bearing">${bearing_opposite}<\div><\div>`;
+                    html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/altitude_level.png" style="width: 100%"><div class="altitude-text">${airway["from_altitude"]}</div><div class="bearing">${bearing_opposite}<\div><\div>`;
 
                 }
                 return html;
@@ -304,14 +301,61 @@ airways.forEach(function (airway) {
                 icon: new L.DivIcon({
                     className: 'altitude-marker',
                     html: altitude_html(),
-                    iconSize: [100, 100],
-                    iconAnchor: [50, 25]
+                    iconSize: [76, 76],
+                    iconAnchor: [38, 38]
                 })
             }).bindPopup(`${airway["from_altitude"]}`)
             .addTo(altitude_pins_layer);
 
         }
 
+});
+
+function resizeLayers(ClassName, multiplyBy) {
+    var altitude_markers = document.getElementsByClassName(ClassName);
+
+    if (altitude_markers.length > 0) {
+        for (let i = 0; i < altitude_markers.length; i++) {
+            var transform = altitude_markers[i].style.transform;
+            if (transform.includes("scale(0") || transform.includes("scale(1")) {
+
+                var pattern = /scale(.)+./gm;
+                console.log("here2");
+                transform = transform.replace(pattern, `scale(${multiplyBy})`);
+                console.log(transform);
+
+            } else if (transform.includes("scale")) {
+                console.log("here3");
+                transform = transform.replace("scale(1)", `scale(${multiplyBy})`);
+            } else {
+                console.log("here1");
+                transform += ` scale(${multiplyBy})`;
+            }
+            altitude_markers[i].style.transform = transform;
+        }
+    }
+}
+
+map.on('zoomend', function () {
+    var currentZoom = map.getZoom();
+    var multiplyBy = 1;
+    // if (currentZoom > 16) {
+    // multiplyBy = 1 + ((currentZoom - 13) * 0.2);
+    // }
+    if (currentZoom < 13 && currentZoom > 10) {
+        multiplyBy = 1 - ((13 - currentZoom) * 0.2);
+    } else if (currentZoom == 10 || currentZoom == 9) {
+        multiplyBy = 0.4;
+    } else if (currentZoom == 8) {
+        multiplyBy = 0.2;
+    } else {
+        multiplyBy = 1;
+    }
+
+    multiplyBy = parseFloat(multiplyBy).toFixed(2);
+
+    resizeLayers("altitude-div", multiplyBy);
+    resizeLayers("waypoint-div", multiplyBy);
 });
 
 // Bring some layers to Front
@@ -336,3 +380,17 @@ L.control.layers({
 }).addTo(map);
 
 map.setView([32.00944444, 34.88555556], 13);
+
+
+function Weather(code) {
+	this.code = code;
+	this.metar = "No Data";
+	this.taf = "No Data"l
+	get: function(ICAO_code){
+		return {metar: this.metar, taf: this.taf};
+	};
+	private getData(){
+		var metarURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&hoursBeforeNow=3&mostRecent=true&stationString=" + code;
+		var tafURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow=3&timeType=issue&mostRecent=true&stationString=" + code;
+	};
+};

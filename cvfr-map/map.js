@@ -385,7 +385,7 @@ map.setView([32.00944444, 34.88555556], 13);
 function Weather(code) {
 	this.code = code;
 	this.metar = "No Data";
-	this.taf = "No Data"l
+	this.taf = "No Data";
 	get: function(ICAO_code){
 		return {metar: this.metar, taf: this.taf};
 	};

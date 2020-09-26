@@ -1,3 +1,14 @@
+// *************** Utitily Functions ****************
+
+function bearingFormat(bearing) {
+    if (bearing.toString().length == 1) {
+        return '00' + bearing;
+    } else if (bearing.toString().length == 2) {
+        return '0' + bearing;
+    }
+    return bearing;
+}
+
 function angleFromCoordinate(lat1, lon1, lat2, lon2) {
     var p1 = {
         x: lat1,
@@ -16,7 +27,7 @@ function angleFromCoordinate(lat1, lon1, lat2, lon2) {
 }
 
 var bearingCalculator = {
-    bearing: function (lat1, lng1, lat2, lng2) {
+    bearing: function(lat1, lng1, lat2, lng2) {
         var dLon = this._toRad(lng2 - lng1);
         var y = Math.sin(dLon) * Math.cos(this._toRad(lat2));
         var x = Math.cos(this._toRad(lat1)) * Math.sin(this._toRad(lat2)) - Math.sin(this._toRad(lat1)) * Math.cos(this._toRad(lat2)) * Math.cos(dLon);
@@ -24,14 +35,87 @@ var bearingCalculator = {
         return ((brng + 360) % 360);
     },
 
-    _toRad: function (deg) {
+    _toRad: function(deg) {
         return deg * Math.PI / 180;
     },
 
-    _toDeg: function (rad) {
+    _toDeg: function(rad) {
         return rad * 180 / Math.PI;
     },
 };
+
+//-- Define radius function
+if (typeof(Number.prototype.toRad) === "undefined") {
+    Number.prototype.toRad = function() {
+        return this * Math.PI / 180;
+    }
+}
+
+//-- Define degrees function
+if (typeof(Number.prototype.toDeg) === "undefined") {
+    Number.prototype.toDeg = function() {
+        return this * (180 / Math.PI);
+    }
+}
+
+function middlePoint(lat1, lng1, lat2, lng2) {
+
+    //-- Longitude difference
+    var dLng = (lng2 - lng1).toRad();
+
+    //-- Convert to radians
+    lat1 = lat1.toRad();
+    lat2 = lat2.toRad();
+    lng1 = lng1.toRad();
+
+    var bX = Math.cos(lat2) * Math.cos(dLng);
+    var bY = Math.cos(lat2) * Math.sin(dLng);
+    var lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + bX) * (Math.cos(lat1) + bX) + bY * bY));
+    var lng3 = lng1 + Math.atan2(bY, Math.cos(lat1) + bX);
+
+    //-- Return result
+    return [lat3.toDeg(), lng3.toDeg()];
+}
+
+// dist in KM
+function destinationPoint(point, brng, dist) {
+    dist = dist / 6371;
+    brng = brng.toRad();
+
+    var lat1 = point.lat.toRad(),
+        lon1 = point.lng.toRad();
+
+    var lat2 = Math.asin(Math.sin(lat1) * Math.cos(dist) +
+        Math.cos(lat1) * Math.sin(dist) * Math.cos(brng));
+
+    var lon2 = lon1 + Math.atan2(Math.sin(brng) * Math.sin(dist) *
+        Math.cos(lat1),
+        Math.cos(dist) - Math.sin(lat1) *
+        Math.sin(lat2));
+
+    if (isNaN(lat2) || isNaN(lon2)) return null;
+
+    return [lat2.toDeg(), lon2.toDeg()];
+}
+
+function getDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI / 180)
+}
+
+// *************** Main code starts here **************************
 
 var map = L.map('mapid', {
     minZoom: 8,
@@ -39,16 +123,15 @@ var map = L.map('mapid', {
 });
 
 var marker;
-map.on('popupopen', function (source) {
+map.on('popupopen', function(source) {
     marker = source.popup;
-    console.log(marker.getContent());
 });
 
 var osm_map_layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'osm',
 }).addTo(map);
 
@@ -61,12 +144,12 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
     attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 });
 
-var waypoints_must_layer = new L.FeatureGroup().addTo(map);
-var waypoints_by_request_layer = new L.FeatureGroup().addTo(map);
-var waypoints_switch_atc_layer = new L.FeatureGroup().addTo(map);
-var civil_airways_layer = new L.FeatureGroup().addTo(map);
-var military_airways_layer = new L.FeatureGroup().addTo(map);
-var altitude_pins_layer = new L.FeatureGroup().addTo(map);
+var waypoints_must_layer = new L.FeatureGroup().addTo(map),
+    waypoints_by_request_layer = new L.FeatureGroup().addTo(map),
+    waypoints_switch_atc_layer = new L.FeatureGroup().addTo(map),
+    civil_airways_layer = new L.FeatureGroup().addTo(map),
+    military_airways_layer = new L.FeatureGroup().addTo(map),
+    altitude_pins_layer = new L.FeatureGroup().addTo(map);
 
 for (var waypoint_key in cvfr_waypoints) {
     var waypoint = cvfr_waypoints[waypoint_key];
@@ -74,138 +157,116 @@ for (var waypoint_key in cvfr_waypoints) {
 
     if (waypoint["atc_switch"]) {
         curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
-            icon: new L.DivIcon({
-                className: 'waypoint-div',
-                html: '<img class="waypoint-icon" src="map_pins/must_switch.png"/>' +
-                '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                icon: new L.DivIcon({
+                    className: 'waypoint-div',
+                    html: '<img class="waypoint-icon" src="map_pins/must_switch.png"/>' +
+                        '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                })
             })
-        })
             .addTo(waypoints_switch_atc_layer);
-        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 0)">הוסף לנתיב</button></div>`);
+        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
+          <div>
+            <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+            <span class="button-text">הוסף לנתיב</span>
+          </div>
+        </div>`);
 
     } else if (waypoint["סוג דיווח"] == "דרישה") {
         curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
-            icon: new L.DivIcon({
-                className: 'waypoint-div',
-                html: '<img class="waypoint-icon" src="map_pins/by_request.png"/>' +
-                '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                icon: new L.DivIcon({
+                    className: 'waypoint-div',
+                    html: '<img class="waypoint-icon" src="map_pins/by_request.png"/>' +
+                        '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                })
             })
-        })
             .addTo(waypoints_by_request_layer);
-        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 0)">הוסף לנתיב</button></div>`);
+        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
+          <div>
+            <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+            <span class="button-text">הוסף לנתיב</span>
+          </div>
+        </div>`);
 
     } else if (waypoint["סוג דיווח"] == "ARP") {
         curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
-            icon: new L.DivIcon({
-                className: 'waypoint-div',
-                html: '<img class="waypoint-icon" src="map_pins/airport.png"/>' +
-                '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                icon: new L.DivIcon({
+                    className: 'waypoint-div',
+                    html: '<img class="waypoint-icon" src="map_pins/airport.png"/>' +
+                        '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                })
             })
-        })
             .addTo(waypoints_by_request_layer);
-        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 1)" class="marker-button">הוסף לנתיב</button><br><button type="button" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="marker-button">קבע כשדה המראה</button><br><button type="button" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="marker-button">קבע כשדה נחיתה</button></div>`);
+        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
+        <div>
+          <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 1)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+          <span class="button-text">הוסף לנתיב</span>
+        </div>
+        <div>
+          <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+          <span class="button-text">קבע כשדה המראה</span>
+        </div>
+        <div>
+          <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+          <span class="button-text">קבע כשדה נחיתה</span>
+        </div>`, {
+            minWidth: 170
+        });
     } else if (waypoint["סוג דיווח"] == "חובה") {
         curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
-            icon: new L.DivIcon({
-                className: 'waypoint-div',
-                html: '<img class="waypoint-icon" src="map_pins/must.png"/>' +
-                '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                icon: new L.DivIcon({
+                    className: 'waypoint-div',
+                    html: '<img class="waypoint-icon" src="map_pins/must.png"/>' +
+                        '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                })
             })
-        })
             .addTo(waypoints_must_layer);
-        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id, 0)">הוסף לנתיב</button></div>`);
-
+        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
+          <div>
+            <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+            <span class="button-text">הוסף לנתיב</span>
+          </div>
+        </div>`);
     };
+}
 
-    console.log(curr_marker.getPopup().getContent());
-    //if(curr_marker.getContent() != ""){
-    //	curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div">${waypoint["שם"]}<br>${waypoint["CODE"]}<br>lat: ${waypoint["LAT"]}, long: ${waypoint["LONG"]}<br><button type="button" id="${waypoint["CODE"]}" onclick="addWaypoint(this.id)">הוסף לנתיב</button></div>`);
-    //}
-};
-
-airways.forEach(function (airway) {
+airways.forEach(function(airway) {
 
     var start_point_LAT = cvfr_waypoints[airway.start_point].LAT,
-    start_point_LONG = cvfr_waypoints[airway.start_point].LONG;
+        start_point_LONG = cvfr_waypoints[airway.start_point].LONG;
     var end_point_LAT = cvfr_waypoints[airway.end_point].LAT,
-    end_point_LONG = cvfr_waypoints[airway.end_point].LONG;
+        end_point_LONG = cvfr_waypoints[airway.end_point].LONG;
 
-    // Take care of polylines that have marging of more then 0.075
+    var bearing = bearingCalculator.bearing(cvfr_waypoints[airway.start_point].LAT, cvfr_waypoints[airway.start_point].LONG, cvfr_waypoints[airway.end_point].LAT, cvfr_waypoints[airway.end_point].LONG);
+    bearing = ~~bearing
 
-    if (start_point_LAT - end_point_LAT > 0.075 || end_point_LAT - start_point_LAT > 0.075) {
-        if (start_point_LAT < end_point_LAT) {
-            start_point_LAT += 0.008;
-            end_point_LAT -= 0.008;
-        } else {
-            start_point_LAT -= 0.008;
-            end_point_LAT += 0.008;
-        }
+    var start_point, end_point;
+
+    var distance = getDistance(cvfr_waypoints[airway.start_point].LAT, cvfr_waypoints[airway.start_point].LONG, cvfr_waypoints[airway.end_point].LAT, cvfr_waypoints[airway.end_point].LONG);
+
+    if (distance > 20) {
+        start_point = destinationPoint({
+            lat: start_point_LAT,
+            lng: start_point_LONG
+        }, bearing, distance * 0.05);
+        end_point = destinationPoint({
+            lat: end_point_LAT,
+            lng: end_point_LONG
+        }, (bearing - 180), distance * 0.05);
+    } else {
+        start_point = destinationPoint({
+            lat: start_point_LAT,
+            lng: start_point_LONG
+        }, bearing, distance * 0.1);
+        end_point = destinationPoint({
+            lat: end_point_LAT,
+            lng: end_point_LONG
+        }, (bearing - 180), distance * 0.1);
     }
-
-    if (start_point_LONG - end_point_LONG > 0.075 || end_point_LONG - start_point_LONG > 0.075) {
-        if (start_point_LONG < end_point_LONG) {
-            start_point_LONG += 0.008;
-            end_point_LONG -= 0.008;
-        } else {
-            start_point_LONG -= 0.008;
-            end_point_LONG += 0.008;
-        }
-    }
-
-    // Take care of polylines that have marging between 0.5 and 0.04=75
-
-    if (0.075 > start_point_LAT - end_point_LAT > 0.05 || 0.075 > end_point_LAT - start_point_LAT > 0.05) {
-        if (start_point_LAT < end_point_LAT) {
-            start_point_LAT += 0.003;
-            end_point_LAT -= 0.003;
-        } else {
-            start_point_LAT -= 0.003;
-            end_point_LAT += 0.003;
-        }
-    }
-
-    if (0.075 > start_point_LONG - end_point_LONG > 0.05 || 0.075 > end_point_LONG - start_point_LONG > 0.05) {
-        if (start_point_LONG < end_point_LONG) {
-            start_point_LONG += 0.003;
-            end_point_LONG -= 0.003;
-        } else {
-            start_point_LONG -= 0.003;
-            end_point_LONG += 0.003;
-        }
-    }
-
-    // Take care of polylines that have marging of less then 0.5
-
-
-    if (start_point_LAT - end_point_LAT < 0.05 || end_point_LAT - start_point_LAT < 0.05) {
-        if (start_point_LAT < end_point_LAT) {
-            start_point_LAT += 0.001;
-            end_point_LAT -= 0.001;
-        } else {
-            start_point_LAT -= 0.001;
-            end_point_LAT += 0.001;
-        }
-    }
-
-    if (start_point_LONG - end_point_LONG < 0.05 || end_point_LONG - start_point_LONG < 0.05) {
-        if (start_point_LONG < end_point_LONG) {
-            start_point_LONG += 0.001;
-            end_point_LONG -= 0.001;
-        } else {
-            start_point_LONG -= 0.001;
-            end_point_LONG += 0.001;
-        }
-    }
-
-    var start_point = [start_point_LAT, start_point_LONG];
-    var end_point = [end_point_LAT, end_point_LONG];
     var latlngs = Array();
-
     latlngs.push(start_point);
-
     latlngs.push(end_point);
 
-    var airway_color = function () {
+    var airway_color = function() {
         if (airway["army_airway"]) {
             return 'rgb(0,114,188)'; //blue
         }
@@ -235,80 +296,150 @@ airways.forEach(function (airway) {
     if (airway["one_way"]) {
         var arrowHead = L.polylineDecorator(polyline, {
             patterns: [{
-                    offset: '100%',
-                    repeat: 0,
-                    symbol: L.Symbol.arrowHead({
-                        pixelSize: 20,
-                        polygon: false,
-                        pathOptions: {
-                            stroke: true,
-                            color: airway_color(),
-                            weight: 6
-                        }
-                    })
-                }
-            ]
+                offset: '100%',
+                repeat: 0,
+                symbol: L.Symbol.arrowHead({
+                    pixelSize: 20,
+                    polygon: false,
+                    pathOptions: {
+                        stroke: true,
+                        color: airway_color(),
+                        weight: 6
+                    }
+                })
+            }]
         }).addTo(map);
     }
 
-    var bearing = bearingCalculator.bearing(cvfr_waypoints[airway.start_point].LAT, cvfr_waypoints[airway.start_point].LONG, cvfr_waypoints[airway.end_point].LAT, cvfr_waypoints[airway.end_point].LONG);
-    bearing = ~~bearing
+    // make altitude marker
 
-        // make altitude marker
+    var rotation_degree = angleFromCoordinate(start_point[0], start_point[1], end_point[0], end_point[1]);
 
-        var altitude_html = function () {
-        var rotation_degree = angleFromCoordinate(start_point[0], start_point[1], end_point[0], end_point[1]);
-        var html = "";
-        if (rotation_degree < -90 || rotation_degree > 90) {
-            html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing" style="transform: rotate(180deg)">${bearing}</div><img src="map_pins/altitude_level.png" style="width: 100%"><div style="transform: rotate(180deg);"><div class="altitude-text" style="transform: translate(-50%, 10%);">${airway["to_altitude"]}</div></div>`;
-        } else {
-            html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/altitude_level.png" style="width: 100%"><div class="altitude-text">${airway["to_altitude"]}</div><div class="bearing">${bearing}<\div><\div>`;
+    if (airway["to_altitude"] == airway["from_altitude"]) {
+        let html = "";
+        let altitude_html = function() {
+            if (rotation_degree < -90 || rotation_degree > 90) {
+                html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/equal_altitude.png" style="width: 100%"><div style="transform: rotate(180deg);"><div class="altitude-text" style="transform: translate(-50%, 10%);">${airway["to_altitude"]}</div></div>`;
+            } else {
+                html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/equal_altitude.png" style="width: 100%"><div class="altitude-text" style="transform: translate(-50%, -60%)">${airway["to_altitude"]}</div></div>`;
+            }
+            return html;
+        };
 
-        }
-        return html;
-    };
+        //make the altitude marker
+        var midPoint = middlePoint(start_point[0], start_point[1], end_point[0], end_point[1]);
 
-    L.marker(start_point, {
-        icon: new L.DivIcon({
-            className: 'altitude-marker',
-            html: altitude_html(),
-            iconSize: [76, 76],
-            iconAnchor: [38, 38]
-        })
-    }).bindPopup(`${airway["to_altitude"]}`)
-    .addTo(altitude_pins_layer);
-
-    //make opposite direction altitude marker if such exists
-
-    var bearing_opposite = bearingCalculator.bearing(cvfr_waypoints[airway.end_point].LAT, cvfr_waypoints[airway.end_point].LONG, cvfr_waypoints[airway.start_point].LAT, cvfr_waypoints[airway.start_point].LONG);
-    bearing_opposite = ~~bearing_opposite
-
-        if (!airway["one_way"]) {
-
-            var altitude_html = function () {
-                var rotation_degree = angleFromCoordinate(end_point[0], end_point[1], start_point[0], start_point[1]);
-                var html = "";
-                if (rotation_degree < -90 || rotation_degree > 90) {
-                    html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing" style="transform: rotate(180deg)">${bearing_opposite}</div><img src="map_pins/altitude_level.png" style="width: 100%"><div style="transform: rotate(180deg);"><div class="altitude-text" style="transform: translate(-50%, 10%);">${airway["from_altitude"]}</div></div>`;
-                } else {
-                    html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/altitude_level.png" style="width: 100%"><div class="altitude-text">${airway["from_altitude"]}</div><div class="bearing">${bearing_opposite}<\div><\div>`;
-
-                }
-                return html;
-            };
-
-            L.marker(end_point, {
+        L.marker(midPoint, {
                 icon: new L.DivIcon({
                     className: 'altitude-marker',
                     html: altitude_html(),
                     iconSize: [76, 76],
                     iconAnchor: [38, 38]
                 })
-            }).bindPopup(`${airway["from_altitude"]}`)
+            })
             .addTo(altitude_pins_layer);
 
-        }
+        let bearingToText = function(bearing) {
+            let html = "";
+            if (rotation_degree < -90 || rotation_degree > 90) {
+                html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing" style="transform: rotate(180deg)">${bearing}</div></div>`;
+            } else {
+                html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing">${bearing}</div></div>`;
+            }
+            return html;
+        };
+        bearingText = bearingFormat(bearing);
+        //make bearing 1
+        L.marker(start_point, {
+                icon: new L.DivIcon({
+                    className: 'altitude-marker',
+                    html: bearingToText(bearingText),
+                    iconSize: [76, 76],
+                    iconAnchor: [38, 38]
+                })
+            })
+            .addTo(altitude_pins_layer);
 
+        //make bearing 2
+
+        var bearing_opposite = bearingCalculator.bearing(cvfr_waypoints[airway.end_point].LAT, cvfr_waypoints[airway.end_point].LONG, cvfr_waypoints[airway.start_point].LAT, cvfr_waypoints[airway.start_point].LONG);
+        bearing_opposite = ~~bearing_opposite
+        bearingText_opposite = bearingFormat(bearing_opposite);
+
+        L.marker(end_point, {
+                icon: new L.DivIcon({
+                    className: 'altitude-marker',
+                    html: bearingToText(bearingText_opposite),
+                    iconSize: [76, 76],
+                    iconAnchor: [38, 38]
+                })
+            })
+            .addTo(altitude_pins_layer);
+
+    } else {
+        bearingText = bearingFormat(bearing);
+
+        var altitude_html = function() {
+            var rotation_degree = angleFromCoordinate(start_point[0], start_point[1], end_point[0], end_point[1]);
+            let html = "";
+            if (rotation_degree < -90 || rotation_degree > 90) {
+                html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing" style="transform: rotate(180deg)">${bearingText}</div><img src="map_pins/altitude_level.png" style="width: 100%"><div style="transform: rotate(180deg);"><div class="altitude-text" style="transform: translate(-50%, 10%);">${airway["to_altitude"]}</div></div>`;
+            } else {
+                html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/altitude_level.png" style="width: 100%"><div class="altitude-text">${airway["to_altitude"]}</div><div class="bearing">${bearingText}</div></div>`;
+
+            }
+            return html;
+        };
+
+        let start_point = destinationPoint({
+            lat: start_point_LAT,
+            lng: start_point_LONG
+        }, bearing, distance * 0.2);
+        let end_point = destinationPoint({
+            lat: end_point_LAT,
+            lng: end_point_LONG
+        }, (bearing - 180), distance * 0.2)
+
+        L.marker(start_point, {
+                icon: new L.DivIcon({
+                    className: 'altitude-marker',
+                    html: altitude_html(),
+                    iconSize: [76, 76],
+                    iconAnchor: [38, 38]
+                })
+            }).bindPopup(`${airway["to_altitude"]}`)
+            .addTo(altitude_pins_layer);
+
+        //make opposite direction altitude marker if such exists
+
+        if (!airway["one_way"]) {
+            var bearing_opposite = bearingCalculator.bearing(cvfr_waypoints[airway.end_point].LAT, cvfr_waypoints[airway.end_point].LONG, cvfr_waypoints[airway.start_point].LAT, cvfr_waypoints[airway.start_point].LONG);
+            bearing_opposite = ~~bearing_opposite
+            bearingText_opposite = bearingFormat(bearing_opposite);
+
+            let altitude_html = function() {
+                let rotation_degree = angleFromCoordinate(end_point[0], end_point[1], start_point[0], start_point[1]);
+                let html = "";
+                if (rotation_degree < -90 || rotation_degree > 90) {
+                    html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><div class="bearing" style="transform: rotate(180deg)">${bearingText_opposite}</div><img src="map_pins/altitude_level.png" style="width: 100%"><div style="transform: rotate(180deg);"><div class="altitude-text" style="transform: translate(-50%, 10%);">${airway["from_altitude"]}</div></div>`;
+                } else {
+                    html += `<div class="altitude-div" style ="transform: rotate(${rotation_degree}deg);"><img src="map_pins/altitude_level.png" style="width: 100%"><div class="altitude-text">${airway["from_altitude"]}</div><div class="bearing">${bearingText_opposite}</div></div>`;
+
+                }
+                return html;
+            };
+
+            L.marker(end_point, {
+                    icon: new L.DivIcon({
+                        className: 'altitude-marker',
+                        html: altitude_html(),
+                        iconSize: [76, 76],
+                        iconAnchor: [38, 38]
+                    })
+                }).bindPopup(`${airway["from_altitude"]}`)
+                .addTo(altitude_pins_layer);
+        }
+    }
 });
 
 function resizeLayers(ClassName, multiplyBy) {
@@ -318,17 +449,11 @@ function resizeLayers(ClassName, multiplyBy) {
         for (let i = 0; i < altitude_markers.length; i++) {
             var transform = altitude_markers[i].style.transform;
             if (transform.includes("scale(0") || transform.includes("scale(1")) {
-
                 var pattern = /scale(.)+./gm;
-                console.log("here2");
                 transform = transform.replace(pattern, `scale(${multiplyBy})`);
-                console.log(transform);
-
             } else if (transform.includes("scale")) {
-                console.log("here3");
                 transform = transform.replace("scale(1)", `scale(${multiplyBy})`);
             } else {
-                console.log("here1");
                 transform += ` scale(${multiplyBy})`;
             }
             altitude_markers[i].style.transform = transform;
@@ -336,7 +461,7 @@ function resizeLayers(ClassName, multiplyBy) {
     }
 }
 
-map.on('zoomend', function () {
+map.on('zoomend', function() {
     var currentZoom = map.getZoom();
     var multiplyBy = 1;
     // if (currentZoom > 16) {
@@ -359,13 +484,14 @@ map.on('zoomend', function () {
 });
 
 // Bring some layers to Front
+civil_airways_layer.bringToBack();
+military_airways_layer.bringToBack();
+altitude_pins_layer.bringToBack();
 waypoints_must_layer.bringToFront();
 waypoints_by_request_layer.bringToFront();
 waypoints_switch_atc_layer.bringToFront();
-altitude_pins_layer.bringToBack();
-civil_airways_layer.bringToBack();
-military_airways_layer.bringToBack();
 
+// Add Layer Control
 L.control.layers({
     "OSM": osm_map_layer,
     "לוויני": Esri_WorldImagery,
@@ -382,15 +508,15 @@ L.control.layers({
 map.setView([32.00944444, 34.88555556], 13);
 
 
-function Weather(code) {
-	this.code = code;
-	this.metar = "No Data";
-	this.taf = "No Data"l
-	get: function(ICAO_code){
-		return {metar: this.metar, taf: this.taf};
-	};
-	private getData(){
-		var metarURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&hoursBeforeNow=3&mostRecent=true&stationString=" + code;
-		var tafURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow=3&timeType=issue&mostRecent=true&stationString=" + code;
-	};
-};
+// function Weather(code) {
+// 	this.code = code;
+// 	this.metar = "No Data";
+// 	this.taf = "No Data";
+// 	get: function(ICAO_code){
+// 		return {metar: this.metar, taf: this.taf};
+// 	};
+// 	private getData(){
+// 		var metarURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&hoursBeforeNow=3&mostRecent=true&stationString=" + code;
+// 		var tafURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow=3&timeType=issue&mostRecent=true&stationString=" + code;
+// 	};
+// };

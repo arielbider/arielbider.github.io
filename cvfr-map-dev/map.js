@@ -125,6 +125,17 @@ var map = L.map('mapid', {
 var marker;
 map.on('popupopen', function(source) {
     marker = source.popup;
+    var content = marker.getContent();
+    var template = /data-waypoint=".+" c/gm;
+    content = content.match(template)[0];
+    content = content.replaceAll("\"", "");
+    content = content.replace(" c", "");
+    content = content.replace("data-waypoint=", "");
+    if (content.includes("LL") && content.length == 4) {
+        updatePopup(content, 1);
+    } else {
+        updatePopup(content, 0);
+    }
 });
 
 var osm_map_layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -197,17 +208,18 @@ for (var waypoint_key in cvfr_waypoints) {
             })
             .addTo(waypoints_by_request_layer);
         curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
-        <div>
-          <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 1)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-          <span class="button-text">הוסף לנתיב</span>
-        </div>
-        <div>
-          <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-          <span class="button-text">קבע כשדה המראה</span>
-        </div>
-        <div>
-          <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-          <span class="button-text">קבע כשדה נחיתה</span>
+          <div>
+            <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 1)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+            <span class="button-text">הוסף לנתיב</span>
+          </div>
+          <div>
+            <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+            <span class="button-text">קבע כשדה המראה</span>
+          </div>
+          <div>
+            <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+            <span class="button-text">קבע כשדה נחיתה</span>
+          </div>
         </div>`, {
             minWidth: 170
         });

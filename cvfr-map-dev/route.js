@@ -147,9 +147,11 @@ function setAsArrival(airport_code) {
 function updatePopup(airport_code, if_airport) {
     let route = document.getElementById("route").innerHTML, dep = document.getElementById("departure").innerHTML,
     arr = document.getElementById("arrival").innerHTML, marker_info = marker.getContent().split("<div>");
-
     marker_info = marker_info[0] + "<div>" + marker_info[1];
-
+    if(!if_airport){
+      marker_info = marker_info.split("</div>");
+      marker_info = marker_info[0] + "</div>" + marker_info[1];
+    }
     if (route.includes(airport_code)) {
         marker_info += `<div>
           <img src="img/plan-normal.png" data-waypoint="${airport_code}" class="popup-button" onclick="removeWaypoint(this.dataset.waypoint, ${if_airport})" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">

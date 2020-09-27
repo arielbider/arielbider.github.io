@@ -181,64 +181,64 @@ for (var waypoint_key in cvfr_waypoints) {
             <span class="button-text">הוסף לנתיב</span>
           </div>
         </div>`);
-
-    } else if (waypoint["סוג דיווח"] == "דרישה") {
-        curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
-                icon: new L.DivIcon({
-                    className: 'waypoint-div',
-                    html: '<img class="waypoint-icon" src="map_pins/by_request.png"/>' +
-                        '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
-                })
-            })
-            .addTo(waypoints_by_request_layer);
-        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
-          <div>
-            <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-            <span class="button-text">הוסף לנתיב</span>
-          </div>
-        </div>`);
-
-    } else if (waypoint["סוג דיווח"] == "ARP") {
-        curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
-                icon: new L.DivIcon({
-                    className: 'waypoint-div',
-                    html: '<img class="waypoint-icon" src="map_pins/airport.png"/>' +
-                        '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
-                })
-            })
-            .addTo(waypoints_by_request_layer);
-        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
-          <div>
-            <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 1)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-            <span class="button-text">הוסף לנתיב</span>
-          </div>
-          <div>
-            <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-            <span class="button-text">קבע כשדה המראה</span>
-          </div>
-          <div>
-            <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-            <span class="button-text">קבע כשדה נחיתה</span>
-          </div>
-        </div>`, {
-            minWidth: 170
-        });
-    } else if (waypoint["סוג דיווח"] == "חובה") {
-        curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
-                icon: new L.DivIcon({
-                    className: 'waypoint-div',
-                    html: '<img class="waypoint-icon" src="map_pins/must.png"/>' +
-                        '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
-                })
-            })
-            .addTo(waypoints_must_layer);
-        curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
-          <div>
-            <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-            <span class="button-text">הוסף לנתיב</span>
-          </div>
-        </div>`);
-    };
+    } else {
+        switch (waypoint["סוג דיווח"]) {
+            case "דרישה":
+                curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
+                    icon: new L.DivIcon({
+                        className: 'waypoint-div',
+                        html: '<img class="waypoint-icon" src="map_pins/by_request.png"/>' +
+                            '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                    })
+                }).addTo(waypoints_by_request_layer);
+                curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
+                    <div>
+                      <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+                      <span class="button-text">הוסף לנתיב</span>
+                    </div>
+                  </div>`);
+                break;
+            case "ARP":
+                curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
+                    icon: new L.DivIcon({
+                        className: 'waypoint-div',
+                        html: '<img class="waypoint-icon" src="map_pins/airport.png"/>' +
+                            '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                    })
+                }).addTo(waypoints_by_request_layer);
+                curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
+                    <div>
+                      <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 1)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+                      <span class="button-text">הוסף לנתיב</span>
+                    </div>
+                    <div>
+                      <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+                      <span class="button-text">קבע כשדה המראה</span>
+                    </div>
+                    <div>
+                      <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+                      <span class="button-text">קבע כשדה נחיתה</span>
+                    </div>
+                  </div>`, {
+                    minWidth: 170
+                });
+                break;
+            case "חובה":
+                curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
+                    icon: new L.DivIcon({
+                        className: 'waypoint-div',
+                        html: '<img class="waypoint-icon" src="map_pins/must.png"/>' +
+                            '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                    })
+                }).addTo(waypoints_must_layer);
+                curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
+                    <div>
+                      <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+                      <span class="button-text">הוסף לנתיב</span>
+                    </div>
+                  </div>`);
+        }
+    }
 }
 
 airways.forEach(function(airway) {

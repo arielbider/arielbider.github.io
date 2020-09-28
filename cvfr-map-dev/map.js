@@ -169,9 +169,10 @@ for (var waypoint_key in cvfr_waypoints) {
     if (waypoint["atc_switch"]) {
         curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
                 icon: new L.DivIcon({
-                    className: 'waypoint-div',
-                    html: '<img class="waypoint-icon" src="map_pins/must_switch.png"/>' +
-                        '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                    iconSize: [120, 20],
+                    iconAnchor: [60, 10],
+                    className: 'waypoint-marker',
+                    html: `<div class="waypoint-div"><img class="waypoint-icon" src="map_pins/must_switch.png"/><br><span class="waypoint-name">${waypoint["שם"]}</span></div></div>`
                 })
             })
             .addTo(waypoints_switch_atc_layer);
@@ -186,9 +187,10 @@ for (var waypoint_key in cvfr_waypoints) {
             case "דרישה":
                 curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
                     icon: new L.DivIcon({
-                        className: 'waypoint-div',
-                        html: '<img class="waypoint-icon" src="map_pins/by_request.png"/>' +
-                            '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                        className: 'waypoint-marker',
+                        iconSize: [120, 20],
+                        iconAnchor: [60, 10],
+                        html: `<div class="waypoint-div"><img class="waypoint-icon" src="map_pins/by_request.png"/><br><span class="waypoint-name">${waypoint["שם"]}</span></div>`
                     })
                 }).addTo(waypoints_by_request_layer);
                 curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
@@ -201,9 +203,10 @@ for (var waypoint_key in cvfr_waypoints) {
             case "ARP":
                 curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
                     icon: new L.DivIcon({
-                        className: 'waypoint-div',
-                        html: '<img class="waypoint-icon" src="map_pins/airport.png"/>' +
-                            '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                        iconSize: [120, 20],
+                        iconAnchor: [60, 10],
+                        className: 'waypoint-marker',
+                        html: `<div class="waypoint-div"><img class="waypoint-icon" src="map_pins/airport.png"/><br><span class="waypoint-name">${waypoint["שם"]}</span></div>`
                     })
                 }).addTo(waypoints_by_request_layer);
                 curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
@@ -226,9 +229,10 @@ for (var waypoint_key in cvfr_waypoints) {
             case "חובה":
                 curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
                     icon: new L.DivIcon({
-                        className: 'waypoint-div',
-                        html: '<img class="waypoint-icon" src="map_pins/must.png"/>' +
-                            '<span class="waypoint-name">' + waypoint["שם"] + '</span>'
+                        iconSize: [120, 20],
+                        iconAnchor: [60, 10],
+                        className: 'waypoint-marker',
+                        html: `<div class="waypoint-div"><img class="waypoint-icon" src="map_pins/must.png"/><br><span class="waypoint-name">${waypoint["שם"]}</span></div>`
                     })
                 }).addTo(waypoints_must_layer);
                 curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
@@ -255,7 +259,16 @@ airways.forEach(function(airway) {
 
     var distance = getDistance(cvfr_waypoints[airway.start_point].LAT, cvfr_waypoints[airway.start_point].LONG, cvfr_waypoints[airway.end_point].LAT, cvfr_waypoints[airway.end_point].LONG);
 
-    if (distance > 20) {
+    if (distance > 25) {
+        start_point = destinationPoint({
+            lat: start_point_LAT,
+            lng: start_point_LONG
+        }, bearing, distance * 0.02);
+        end_point = destinationPoint({
+            lat: end_point_LAT,
+            lng: end_point_LONG
+        }, (bearing - 180), distance * 0.02);
+    } else if (distance > 20) {
         start_point = destinationPoint({
             lat: start_point_LAT,
             lng: start_point_LONG
@@ -366,8 +379,8 @@ airways.forEach(function(airway) {
                 icon: new L.DivIcon({
                     className: 'altitude-marker',
                     html: bearingToText(bearingText),
-                    iconSize: [76, 76],
-                    iconAnchor: [38, 38]
+                    iconSize: [30, 30],
+                    iconAnchor: [0, 0]
                 })
             })
             .addTo(altitude_pins_layer);
@@ -382,8 +395,8 @@ airways.forEach(function(airway) {
                 icon: new L.DivIcon({
                     className: 'altitude-marker',
                     html: bearingToText(bearingText_opposite),
-                    iconSize: [76, 76],
-                    iconAnchor: [38, 38]
+                    iconSize: [30, 30],
+                    iconAnchor: [0, 0]
                 })
             })
             .addTo(altitude_pins_layer);
@@ -413,14 +426,13 @@ airways.forEach(function(airway) {
         }, (bearing - 180), distance * 0.2)
 
         L.marker(start_point, {
-                icon: new L.DivIcon({
-                    className: 'altitude-marker',
-                    html: altitude_html(),
-                    iconSize: [76, 76],
-                    iconAnchor: [38, 38]
-                })
-            }).bindPopup(`${airway["to_altitude"]}`)
-            .addTo(altitude_pins_layer);
+            icon: new L.DivIcon({
+                className: 'altitude-marker',
+                html: altitude_html(),
+                iconSize: [76, 76],
+                iconAnchor: [38, 38]
+            })
+        }).addTo(altitude_pins_layer);
 
         //make opposite direction altitude marker if such exists
 
@@ -442,14 +454,13 @@ airways.forEach(function(airway) {
             };
 
             L.marker(end_point, {
-                    icon: new L.DivIcon({
-                        className: 'altitude-marker',
-                        html: altitude_html(),
-                        iconSize: [76, 76],
-                        iconAnchor: [38, 38]
-                    })
-                }).bindPopup(`${airway["from_altitude"]}`)
-                .addTo(altitude_pins_layer);
+                icon: new L.DivIcon({
+                    className: 'altitude-marker',
+                    html: altitude_html(),
+                    iconSize: [76, 76],
+                    iconAnchor: [38, 38]
+                })
+            }).addTo(altitude_pins_layer);
         }
     }
 });

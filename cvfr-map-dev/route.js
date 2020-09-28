@@ -42,8 +42,7 @@ document.getElementById('route').addEventListener('keyup', translteRoute);
 
 function translteRoute() {
     let route = document.getElementById("route").innerText;
-    //console.log(route);
-    let route_upper = route.toUpperCase();
+
     if (route != "") {
         let ICAO_codes = route.split(" ");
 
@@ -67,7 +66,6 @@ function translteRoute() {
         route_polyline.setLatLngs([]);
         addAirportsToRoutePolyline();
     }
-    //document.getElementById("route").innerText = route_upper;
 }
 
 var dep = "",
@@ -75,8 +73,8 @@ var dep = "",
 
 function validateAirport(id) {
 
-    var airport_code = document.getElementById(id).innerHTML;
-
+    var airport_code = document.getElementById(id).innerText.toUpperCase();
+    console.log(airport_code);
     if (id == "departure" && ((airport_code.length == 3 && dep.length == 4) || (airport_code.length == 5 && dep.length == 4) || (dep.length - airport_code.length > 1)) && route_polyline.getLatLngs().length > 0) {
         var new_polyline = route_polyline.getLatLngs();
         new_polyline.splice(0, 1);
@@ -96,7 +94,6 @@ function validateAirport(id) {
         if (airport.length != 0) {
 
             translteRoute();
-            //addAirportsToRoutePolyline();
 
             document.getElementById("validate-" + id).innerHTML = airport[0]["שם"];
             if (id == "departure") {
@@ -111,8 +108,8 @@ function validateAirport(id) {
 }
 
 function addAirportsToRoutePolyline() {
-    var dep = document.getElementById("departure").innerHTML,
-        arr = document.getElementById("arrival").innerHTML,
+    var dep = document.getElementById("departure").innerHTML.toUpperCase(),
+        arr = document.getElementById("arrival").innerHTML.toUpperCase(),
         array_of_points = route_polyline.getLatLngs();
 
     if (dep != "") {
@@ -181,7 +178,7 @@ function updatePopup(airport_code, if_airport) {
     marker.setContent(marker_info);
 }
 
-
+// ****************************************** Take care of route box drag option
 
 function isMobile() {
     var check = false;
@@ -243,3 +240,5 @@ function divMove(e) {
         div.style.left = (e.clientX - offX) + 'px';
     }
 }
+
+// *****************************************************************************

@@ -14,6 +14,10 @@ body,
     width: 28px;
 }
 
+.waypoint-marker{
+  text-align: center;
+}
+
 /* body {
 	padding: 0;
 	margin: 0;
@@ -104,6 +108,7 @@ body,
     border-width: 1px;
     text-align: center;
     direction: ltr;
+    text-transform: uppercase;
 }
 
 #route {
@@ -114,6 +119,7 @@ body,
     background-color: white;
     outline: 1px solid black;
     margin-top: 10px;
+    text-transform: uppercase;
 }
 
 .airport_validate {

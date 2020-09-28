@@ -298,28 +298,34 @@ airways.forEach(function(airway) {
         return 'rgb(0,166,81)'; // green
     };
 
+    let polyline;
+
     if (airway["on_atc_approval"]) {
-        var polyline = L.polyline(latlngs, {
+        polyline = L.polyline(latlngs, {
             color: airway_color(),
             weight: 6,
             dashArray: '5, 15',
             lineCap: 'square'
         });
     } else {
-        var polyline = L.polyline(latlngs, {
+        polyline = L.polyline(latlngs, {
             color: airway_color(),
             weight: 6
         });
     }
 
-    if (airway["army_airway"]) {
-        polyline.addTo(military_airways_layer);
-    } else {
-        polyline.addTo(civil_airways_layer);
+    let layerToAddTo = function() {
+        if (airway["army_airway"]) {
+            return military_airways_layer;
+        } else {
+            return civil_airways_layer;
+        }
     }
 
+    polyline.addTo(layerToAddTo());
+
     if (airway["one_way"]) {
-        var arrowHead = L.polylineDecorator(polyline, {
+        let arrowHead = L.polylineDecorator(polyline, {
             patterns: [{
                 offset: '100%',
                 repeat: 0,
@@ -333,7 +339,7 @@ airways.forEach(function(airway) {
                     }
                 })
             }]
-        }).addTo(map);
+        }).addTo(layerToAddTo());
     }
 
     // make altitude marker

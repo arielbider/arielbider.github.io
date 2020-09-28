@@ -43,7 +43,7 @@ document.getElementById('route').addEventListener('keyup', translteRoute);
 function translteRoute() {
     let route = document.getElementById("route").innerText;
 
-    if (route != "") {
+    if (route) {
         let ICAO_codes = route.split(" ");
 
         let latlongs = Array();
@@ -66,6 +66,7 @@ function translteRoute() {
         route_polyline.setLatLngs([]);
         addAirportsToRoutePolyline();
     }
+    route_polyline.bringToFront();
 }
 
 var dep = "",

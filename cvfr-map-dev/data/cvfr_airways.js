@@ -1333,8 +1333,8 @@ var airways =
         "end_point": "מחלף נשרים",
         "army_airway": null,
         "on_atc_approval": 1,
-        "to_altitude": 2000,
-        "from_altitude": 1200,
+        "to_altitude": 1200,
+        "from_altitude": 2000,
         "one_way": 0
     }, {
         "start_point": "בן גוריון",

@@ -1799,5 +1799,15 @@ cvfr_waypoints =
         "LONG": 35.12555556,
         "LAT": 31.2775,
         "atc_switch": null
+    },
+    "אילן רמון": {
+        "שם": "אילן רמון",
+        "סוג דיווח": "ARP",
+        "EAST": "",
+        "NORTH": "",
+        "CODE": "LLER",
+        "LONG": 35.0063531,
+        "LAT": 29.7254847,
+        "atc_switch": null
     }
 };

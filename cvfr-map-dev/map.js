@@ -150,8 +150,8 @@ for (let waypoint_key in cvfr_waypoints) {
     if (waypoint["type"] == "ARP") {
         curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
             icon: new L.DivIcon({
-                iconSize: [256, 256],
-                iconAnchor: [128, 128],
+                iconSize: [240, 240],
+                iconAnchor: [120, 120],
                 className: 'waypoint-marker',
             })
         }).addTo(waypoints_layer);
@@ -188,46 +188,44 @@ for (let waypoint_key in cvfr_waypoints) {
     }
 }
 
-function resizeLayers(ClassName, multiplyBy) {
-    var altitude_markers = document.getElementsByClassName(ClassName);
-
-    if (altitude_markers.length > 0) {
-        for (let i = 0; i < altitude_markers.length; i++) {
-            var transform = altitude_markers[i].style.transform;
-            if (transform.includes("scale(0") || transform.includes("scale(1")) {
-                var pattern = /scale(.)+./gm;
-                transform = transform.replace(pattern, `scale(${multiplyBy})`);
-            } else if (transform.includes("scale")) {
-                transform = transform.replace("scale(1)", `scale(${multiplyBy})`);
-            } else {
-                transform += ` scale(${multiplyBy})`;
-            }
-            altitude_markers[i].style.transform = transform;
-        }
-    }
-}
-
-map.on('zoomend', function() {
-    var currentZoom = map.getZoom();
-    var multiplyBy = 1;
-    // if (currentZoom > 16) {
-    // multiplyBy = 1 + ((currentZoom - 13) * 0.2);
-    // }
-    if (currentZoom < 13 && currentZoom > 10) {
-        multiplyBy = 1 - ((13 - currentZoom) * 0.2);
-    } else if (currentZoom == 10 || currentZoom == 9) {
-        multiplyBy = 0.4;
-    } else if (currentZoom == 8) {
-        multiplyBy = 0.2;
-    } else {
-        multiplyBy = 1;
-    }
-
-    multiplyBy = parseFloat(multiplyBy).toFixed(2);
-
-    resizeLayers("altitude-div", multiplyBy);
-    resizeLayers("waypoint-div", multiplyBy);
-});
+// function resizeLayers(multiplyBy) {
+//     //waypoints_layer.getLayers().length
+//     if (altitude_markers.length > 0) {
+//         for (let i = 0; i < altitude_markers.length; i++) {
+//             var transform = altitude_markers[i].style.transform;
+//             if (transform.includes("scale(0") || transform.includes("scale(1")) {
+//                 var pattern = /scale(.)+./gm;
+//                 transform = transform.replace(pattern, `scale(${multiplyBy})`);
+//             } else if (transform.includes("scale")) {
+//                 transform = transform.replace("scale(1)", `scale(${multiplyBy})`);
+//             } else {
+//                 transform += ` scale(${multiplyBy})`;
+//             }
+//             altitude_markers[i].style.transform = transform;
+//         }
+//     }
+// }
+//
+// map.on('zoomend', function() {
+//     var currentZoom = map.getZoom();
+//     var multiplyBy = 1;
+//     // if (currentZoom > 16) {
+//     // multiplyBy = 1 + ((currentZoom - 13) * 0.2);
+//     // }
+//     if (currentZoom < 13 && currentZoom > 10) {
+//         multiplyBy = 1 - ((13 - currentZoom) * 0.2);
+//     } else if (currentZoom == 10 || currentZoom == 9) {
+//         multiplyBy = 0.4;
+//     } else if (currentZoom == 8) {
+//         multiplyBy = 0.2;
+//     } else {
+//         multiplyBy = 1;
+//     }
+//
+//     multiplyBy = parseFloat(multiplyBy).toFixed(2);
+//
+//     resizeLayers(multiplyBy);
+// });
 
 map.setView([32.00944444, 34.88555556], 13);
 

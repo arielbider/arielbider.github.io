@@ -182,6 +182,7 @@ body,
   height: 100%;
   font-family: 'Assistant', sans-serif;
   direction: rtl;
+  overflow-y: auto;
 }
 
 .inner-sidebar{

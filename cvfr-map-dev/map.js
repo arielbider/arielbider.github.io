@@ -243,6 +243,29 @@ map.setView([32.00944444, 34.88555556], 13);
 // 	};
 // };
 
+chartsData.forEach((chart, i) => {
+  console.log(chart);
+  let airportName = document.createElement("h3")
+  airportName.classList.add("airport-chart-title");
+  airportName.innerHTML = chart.name;
+  let list = document.createElement("ul");
+  chart.charts.forEach((link, i) => {
+    let listItem = document.createElement("li");
+    listItem.innerHTML = link.chartName;
+    listItem.classList.add("chart-button");
+    listItem.dataset.url = link.url;
+    if(link.small){
+      listItem.dataset.issmall = link.small;
+    }
+    list.appendChild(listItem);
+  });
+  console.log(list)
+  document.getElementById("inner-sidebar").appendChild(airportName);
+  document.getElementById("inner-sidebar").appendChild(list);
+});
+
+
+
 var currChartLayer;
 
 function changeToChart(url, isSmall){
@@ -276,6 +299,5 @@ function backToMap(){
 let charts = document.getElementsByClassName("chart-button");
 let i;
 for (i = 0; i < charts.length; i++){
-  console.log(charts[i]);
   charts[i].addEventListener("click", function(){changeToChart(this.dataset.url, this.dataset.issmall)});
 }

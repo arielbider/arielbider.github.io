@@ -1,20 +1,20 @@
 body {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 html,
 body,
 #mapid {
-    height: 100%;
-    width: 100vw;
+  height: 100vh;
+  width: 100%;
 }
 
 .waypoint-icon {
-    width: 28px;
+  width: 28px;
 }
 
-.waypoint-marker{
+.waypoint-marker {
   text-align: center;
 }
 
@@ -29,53 +29,51 @@ body,
 	bottom: 0;
 	width: 100%;
 }*/
-
 #route {
-    text-align: center;
+  text-align: center;
 }
 
 .waypoint-name {
-    font-weight: bold;
-    width: 80px;
-    font-size: 16px;
+  font-weight: bold;
+  width: 80px;
+  font-size: 16px;
 }
 
 .altitude-div {
-    position: relative;
-    text-align: center;
-    color: white;
-    width: 100%;
+  position: relative;
+  text-align: center;
+  color: white;
+  width: 100%;
 }
 
 .altitude-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -100%);
-    color: black;
-    font-family: Arial, sans-serif;
-    font-size: 20px;
-    font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  color: black;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .bearing {
-    color: rgb(176, 73, 144);
-    font-size: 16px;
-    font-weight: bold;
+  color: rgb(176, 73, 144);
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .waypoint_popup {
-    direction: rtl;
-    text-align: right;
+  direction: rtl;
+  text-align: right;
 }
 
 /* [contenteditable] {
 	outline: 0px solid transparent;
 } */
-
 @import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
 
-.planner {
+/* .planner {
     text-align: right;
     direction: rtl;
     font-family: 'Assistant', sans-serif;
@@ -89,70 +87,126 @@ body,
     line-height: 30px;
     background-color: rgb(238, 238, 238);
     cursor: pointer
+} */
+.planner {
+  text-align: right;
+  direction: rtl;
+  font-family: 'Assistant', sans-serif;
+  width: 500px;
+  position: absolute;
+  right: 12%;
+  z-index: 999;
+  background-color: #fff;
+  padding: 5px 10px 10px 10px;
+  border: 1px solid #999;
+  line-height: 30px;
+  background-color: rgb(238, 238, 238);
+  cursor: pointer
 }
 
 @media only screen and (max-width: 576px) {
-    #planner {
-        width: 96%;
-        right: 0px;
-    }
+  #planner {
+    width: 96%;
+    right: 0px;
+  }
 }
 
 .airport {
-    display: inline-block;
-    width: 100px;
-    background-color: white;
-    margin-top: 10px;
-    border: solid rgb(153, 153, 153);
-    border-radius: 4px;
-    border-width: 1px;
-    text-align: center;
-    direction: ltr;
-    text-transform: uppercase;
+  display: inline-block;
+  width: 100px;
+  background-color: white;
+  margin-top: 10px;
+  border: solid rgb(153, 153, 153);
+  border-radius: 4px;
+  border-width: 1px;
+  text-align: center;
+  direction: ltr;
+  text-transform: uppercase;
 }
 
 #route {
-    direction: ltr;
-    width: 98%;
-    height: 120px;
-    margin: auto;
-    background-color: white;
-    outline: 1px solid black;
-    margin-top: 10px;
-    text-transform: uppercase;
+  direction: ltr;
+  width: 98%;
+  height: 120px;
+  margin: auto;
+  background-color: white;
+  outline: 1px solid black;
+  margin-top: 10px;
+  text-transform: uppercase;
 }
 
 .airport_validate {
-    display: inline-block;
-    margin-right: 15px;
-    font-weight: bold;
+  display: inline-block;
+  margin-right: 15px;
+  font-weight: bold;
 }
 
 .marker-button {
-    margin: 5px;
+  margin: 5px;
 }
 
 .airport-name {
-    font-size: 16px;
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 5px
+  font-size: 16px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 5px
 }
 
 .popup-button {
-    margin-left: 5px;
-    width: 40px;
-    vertical-align: bottom;
+  margin-left: 5px;
+  width: 40px;
+  vertical-align: bottom;
 }
 
 .button-text {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .leaflet-popup-content {
-    margin: 10px 10px;
+  margin: 10px 10px;
 }
 
-.leaflet-control-layers-list{
+.leaflet-control-layers-list {
   direction: rtl;
+}
+
+.map-container {
+  width: 90%;
+  float: right
+}
+
+.sidebar {
+  background-color: rgb(66, 66, 66);
+  width: 10%;
+  float: right;
+  height: 100%;
+  font-family: 'Assistant', sans-serif;
+  direction: rtl;
+}
+
+.inner-sidebar{
+  color: white;
+  padding-right: 10%;
+  padding-left: 10%;
+}
+
+.main-map-button{
+  text-align: center;
+  margin: auto;
+  margin-top: 15px;
+  color: black;
+  background-color: mediumspringgreen;
+  font-size: 22px;
+  width: 85%;
+  padding: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.chart-button{
+  cursor: pointer;
+}
+
+.airport-chart-title{
+  cursor: default;
 }

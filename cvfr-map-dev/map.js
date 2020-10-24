@@ -242,3 +242,40 @@ map.setView([32.00944444, 34.88555556], 13);
 // 		var tafURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow=3&timeType=issue&mostRecent=true&stationString=" + code;
 // 	};
 // };
+
+var currChartLayer;
+
+function changeToChart(url, isSmall){
+  if(currChartLayer){
+    map.removeLayer(currChartLayer);
+  }
+
+  console.log(isSmall);
+
+  if(isSmall){
+    map.setMaxZoom(19);
+  } else {
+    map.setMaxZoom(14);
+  }
+
+  url = 'charts/' + url;
+  url += '/{z}/{x}/{y}.png';
+  console.log(url);
+  currChartLayer = L.tileLayer(url, {
+      attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',
+  }).addTo(map);
+}
+
+function backToMap(){
+  if(currChartLayer){
+    map.removeLayer(currChartLayer);
+    map.addLayer(cvfr_map);
+  }
+}
+
+let charts = document.getElementsByClassName("chart-button");
+let i;
+for (i = 0; i < charts.length; i++){
+  console.log(charts[i]);
+  charts[i].addEventListener("click", function(){changeToChart(this.dataset.url, this.dataset.issmall)});
+}

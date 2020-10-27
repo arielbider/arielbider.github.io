@@ -101,7 +101,8 @@ body,
   border: 1px solid #999;
   line-height: 30px;
   background-color: rgb(238, 238, 238);
-  cursor: pointer
+  cursor: pointer;
+  user-select: none;
 }
 
 @media only screen and (max-width: 576px) {
@@ -122,6 +123,7 @@ body,
   text-align: center;
   direction: ltr;
   text-transform: uppercase;
+  color: black;
 }
 
 #route {
@@ -170,31 +172,29 @@ body,
   direction: rtl;
 }
 
-.map-container {
-  width: 90%;
-  float: right
-}
-
-.sidebar {
-  background-color: rgb(66, 66, 66);
-  width: 10%;
-  float: right;
+.leaflet-sidebar-pane {
   height: 100%;
   font-family: 'Assistant', sans-serif;
   direction: rtl;
-  overflow-y: auto;
+  user-select: none;
+  font-size: 18px;
 }
 
-.inner-sidebar{
+.charts-list a {
+  color: white;
+}
+
+.inner-sidebar {
   color: white;
   padding-right: 10%;
   padding-left: 10%;
 }
 
-.main-map-button{
+.main-map-button {
   text-align: center;
   margin: auto;
   margin-top: 15px;
+  margin-bottom: 10px;
   color: black;
   background-color: mediumspringgreen;
   font-size: 22px;
@@ -204,10 +204,60 @@ body,
   cursor: pointer;
 }
 
-.chart-button{
+.airport-chart-title {
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.fa-arrow-left, .fa-arrow-down {
+  display: inline-block;
+  color: rgb(120, 120, 120);
+  margin-right: 5%;
+}
+
+.fa-plus-square, .fa-plus-square {
+  display: inline-block;
+}
+
+.fa-plus-square {
+  color: green;
+}
+
+.fa-minus-square {
+  color: red;
+}
+
+.charts-list {
+  padding-right: 15px;
+  display: none;
+}
+
+.leaflet-sidebar-tabs {
+  background-color: rgb(66, 66, 66);
+}
+
+.leaflet-sidebar-content {
+  background-color: rgb(66, 66, 66, .95);
+}
+
+.leaflet-sidebar-tabs .fa {
+  color: white;
+}
+
+.leaflet-sidebar-header {
+  text-align: right;
+}
+
+.chart-data {
   cursor: pointer;
 }
 
-.airport-chart-title{
-  cursor: default;
+.airport-text {
+  color: white;
+}
+
+.leaflet-sidebar-pane {
+  color: white;
 }

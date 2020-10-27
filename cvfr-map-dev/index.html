@@ -15,6 +15,11 @@
 
   <script src="https://cdn.jsdelivr.net/npm/leaflet-textpath@1.2.3/leaflet.textpath.min.js"></script>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-sidebar-v2@3.2.3/css/leaflet-sidebar.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/leaflet-sidebar-v2@3.2.3/js/leaflet-sidebar.min.js"></script>
+
   <script src="data/cvfr_waypoints.js"></script>
   <script src="data/cvfr_airways.js"></script>
   <script src="data/charts.js"></script>
@@ -26,33 +31,98 @@
 </head>
 
 <body>
-  <div id="sidebar" class="sidebar">
-    <div class="main-map-button" onclick="backToMap()">חזרה למפת CVFR</div>
-    <div id="inner-sidebar" class="inner-sidebar">
+  <div id="sidebar" class="leaflet-sidebar collapsed">
+    <!-- Nav tabs -->
+    <div class="leaflet-sidebar-tabs">
+      <ul role="tablist">
+        <li>
+          <a href="#help" role="tab" title="עזרה"><i class="fa fa-question-circle"></i></a>
+        </li>
+        <li>
+          <a href="#charts" role="tab" title="דפיות"><i class="fa fa-file-alt"></i></a>
+        </li>
+        <li>
+          <a href="#flight-plan" role="tab" title="תוכנית טיסה"><i class="fa fa-edit"></i></a>
+        </li>
+      </ul>
+
+      <ul role="tablist">
+        <li>
+          <a href="#settings" role="tab"><i class="fa fa-cog"></i></a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Tab panes -->
+    <div class="leaflet-sidebar-content">
+
+      <div class="leaflet-sidebar-pane" id="help">
+        <h1 class="leaflet-sidebar-header">
+          עזרה
+          <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+        </h1>
+
+        <h3>מה זאת המערכת הזאת?</h3>
+        <p>מערכת זאת נבנתה עבור טייסי CVFR שלא רוצים לבזבז זמן על תכנון הטיסה.<br>
+          ניתן לתכנן כאן את הטיסה שלכם, ולצפות במפת ה-CVFR ובדפיות השדות השונים.</p>
+        <p><br></p>
+        <h3>כיצד לתכנן נתיב?</h3>
+        <p>ישנן 2 אופציות &ndash; האחת, ללחוץ על נקודת CVFR ובחלון שיפתח לכם ללחוץ על &quot;הוסף לנתיב&quot;.<br>
+          בנוסף, אפשר לכתוב תחת חלון תוכנית טיסה (החלון השלישי בעמודה זו) ולכתוב את קוד הנקודות כקבוע במפה האחורית של מפת ה-CVFR (5 אותיות).<br>לדוגמה: BAZRA GNYAM יתורגם לנתיב בין בצרה לגני עם.</p>
+        <p><br></p>
+        <h3>כיצד לבחור שדות תעופה?</h3>
+        <p>גם כאן כמו בתכנון נתיב, ניתן לנווט למיקום שדה התעופה במפת ה-CVFR וללחוץ על הנקודה. בחלון שיפתח ניתן לבחור בבחירה כשדה המראה או נחיתה. לחילופין, ניתן לכתוב את קוד ICAO (4 אותיות) של שדה התעופה.</p>
+        <p><br></p>
+        <h3>תודות</h3>
+        <p>תודה מיוחדת לבר רודוי שעזר עם המרת המפה ולימד אותי כיצד להפוך את הדפיות לשמישות כאן במערכת<br>
+        תודה גם לכל המשתמשים במערכת, זה לא מובן מאליו.</p>
+      </div>
+
+      <div class="leaflet-sidebar-pane" id="charts">
+        <h1 class="leaflet-sidebar-header">
+          דפיות
+          <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+        </h1>
+
+        <div class="main-map-button" onclick="removeAll()">סגור את כל הדפיות</div>
+        <div id="inner-sidebar" class="inner-sidebar">
+        </div>
+      </div>
+
+      <div class="leaflet-sidebar-pane" id="flight-plan">
+        <h1 class="leaflet-sidebar-header">
+          תוכנית טיסה<span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+        </h1>
+
+        <div class="airport-text">
+          שדה המראה:
+          <div contenteditable="true" id="departure" class="airport" onkeyup="validateAirport(this.id)"></div>
+          <div id="validate-departure" class="airport_validate"></div>
+        </div>
+        <div class="airport-text">
+          שדה נחיתה:
+          <div contenteditable="true" id="arrival" class="airport" onkeyup="validateAirport(this.id)"></div>
+          <div id="validate-arrival" class="airport_validate"></div>
+        </div>
+        <div id="route" contenteditable="true"></div>
+
+      </div>
+
+      <div class="leaflet-sidebar-pane" id="settings">
+        <h1 class="leaflet-sidebar-header">
+          הגדרות<span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+        </h1>
+      </div>
     </div>
   </div>
+
   <div class="map-container">
-    <div id="planner" class="planner" style="bottom: 75px;">
-      <div style="font-size: 20px; font-weight: bold;">
-        תוכנית טיסה
-      </div>
-      <div class="airport-text">
-        שדה המראה:
-        <div contenteditable="true" id="departure" class="airport" onkeyup="validateAirport(this.id)"></div>
-        <div id="validate-departure" class="airport_validate"></div>
-      </div>
-      <div class="airport-text">
-        שדה נחיתה:
-        <div contenteditable="true" id="arrival" class="airport" onkeyup="validateAirport(this.id)"></div>
-        <div id="validate-arrival" class="airport_validate"></div>
-      </div>
-      <div id="route" contenteditable="true"></div>
-    </div>
 
     <div id="mapid" draggable="false"></div>
 
     <script src="map.js"></script>
     <script src="route.js"></script>
+    <script src="toolbar.js"></script>
   </div>
 </body>
 

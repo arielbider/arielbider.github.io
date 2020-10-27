@@ -128,13 +128,13 @@ body,
 
 #route {
   direction: ltr;
-  width: 98%;
   height: 120px;
   margin: auto;
   background-color: white;
   outline: 1px solid black;
   margin-top: 10px;
   text-transform: uppercase;
+  color: black;
 }
 
 .airport_validate {

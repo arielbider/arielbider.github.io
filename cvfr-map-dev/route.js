@@ -1,181 +1,271 @@
 function addWaypoint(id, if_airport) {
-  if (document.getElementById("route").innerHTML == "") {
-    document.getElementById("route").innerHTML = id;
-  } else {
-    document.getElementById("route").innerHTML += " " + id;
-  }
+	if (document.getElementById("route").innerHTML == "") {
+		document.getElementById("route").innerHTML = id;
+	} else {
+		document.getElementById("route").innerHTML += " " + id;
+	}
 
-  updatePopup(id, if_airport);
-  translteRoute();
+	updatePopup(id, if_airport);
+	translteRoute();
 }
 
 function removeWaypoint(id, if_airport) {
 
-  var route_string = document.getElementById("route").innerHTML;
+	var route_string = document.getElementById("route").innerHTML;
 
-  if (route_string != "") {
+	if (route_string != "") {
 
-    ICAO_code = id.replaceAll(" ", "");
+		ICAO_code = id.replaceAll(" ", "");
 
-    var index = route_string.lastIndexOf(ICAO_code),
-      route_string_as_Array = Array.from(route_string),
-      last_char = ICAO_code.length;
+		var index = route_string.lastIndexOf(ICAO_code),
+			route_string_as_Array = Array.from(route_string),
+			last_char = ICAO_code.length;
 
-    for (var i = 0; i < last_char; i++) {
-      route_string_as_Array.splice(index, 1);
-    }
+		for (var i = 0; i < last_char; i++) {
+			route_string_as_Array.splice(index, 1);
+		}
 
-    document.getElementById("route").innerHTML = route_string_as_Array.join('');
-    updatePopup(id, if_airport);
-    translteRoute();
-  }
+		document.getElementById("route").innerHTML = route_string_as_Array.join('');
+		updatePopup(id, if_airport);
+		translteRoute();
+	}
 }
 
-var route_polyline = L.polyline([], {
-  color: 'rgb(255,0,255)',
-  weight: 10,
-  opacity: 0.5,
-  id: 'route_polyline'
-}).addTo(map);
+class routePolyline {
+	constructor() {
+		this._polyline = new L.Polyline([], {
+			color: 'rgb(255,0,255)',
+			weight: 10,
+			opacity: 0.5,
+			id: 'route_polyline'
+		}).addTo(map);
+		this._airways = [];
+		this.error = false;
+	}
+
+	hasError(errorBool) {
+		this.error = errorBool;
+	}
+
+	addAirway(airway) {
+		this._airways.push(airway);
+		if (!this.error) {
+			this._setNewPolyline();
+		}
+	}
+
+	removeAirway(airway) {
+		let index = _airways.findIndex(e => e.start_point == airway.start_point && e.end_point == airway.end_point);
+		this._airways.splice(index, 1);
+		if (!this.error) {
+			this._setNewPolyline();
+		}
+	}
+
+	removeAll() {
+		this._airways = [];
+		this._setNewPolyline();
+	}
+
+	_setNewPolyline() {
+		let latLongs = Array();
+
+		this._airways.forEach((airway, i) => {
+			let coords = this._getCoordsOfAirway(airway);
+			if (i == 0) {
+				latLongs.push([coords.start_point.lat, coords.start_point.long]);
+			}
+			if (airway.hasOwnProperty('points')) {
+				airway.points.forEach((point, x) => {
+					latLongs.push([point.lat, point.long]);
+				});
+			}
+
+			latLongs.push([coords.end_point.lat, coords.end_point.long]);
+		});
+
+		this._polyline.setLatLngs(latLongs);
+		this._polyline.bringToFront();
+	}
+
+	_getCoordsOfAirway(airway) {
+		let point1 = Object.values(cvfr_waypoints).find(waypoint => waypoint["name"] == airway.start_point);
+		let point2 = Object.values(cvfr_waypoints).find(waypoint => waypoint["name"] == airway.end_point);
+		return {
+			start_point: {
+				lat: point1.LAT,
+				long: point1.LONG
+			},
+			end_point: {
+				lat: point2.LAT,
+				long: point2.LONG
+			}
+		};
+	}
+}
+
+var route_polyline = new routePolyline;
 
 document.getElementById('route').addEventListener('keyup', translteRoute);
 
 function translteRoute() {
-  let route = document.getElementById("route").innerText;
+	let route = document.getElementById("route").innerText;
+	console.log(route);
+	let departure = document.getElementById("departure").innerText;
+	departure = departure.replaceAll(" ", "");
+	let arrival = document.getElementById("arrival").innerText;
+	departure = departure.replaceAll(" ", "");
 
-  if (route != "") {
-    let ICAO_codes = route.split(" ");
+	if (route || (departure && arrival)) {
+		let errors = Array();
+		let ICAO_codes = route.split(" ");
+		ICAO_codes = ICAO_codes.filter(code => code);
 
-    let latlongs = Array();
+		if (departure) {
+			ICAO_codes.unshift(departure);
+		}
+		if (arrival) {
+			ICAO_codes.push(arrival);
+		}
+		console.log(ICAO_codes);
+		let i;
+		route_polyline.removeAll();
 
-    ICAO_codes.forEach(function(code) {
-      code = code.replaceAll(" ", "");
-      code = code.replaceAll("&nbsp;", "");
-      let waypoint_data = Object.values(cvfr_waypoints).filter(waypoint => waypoint.CODE == code);
+		route_polyline.hasError(false);
+		document.getElementById("routes-errors").innerHTML = "";
 
-      if (waypoint_data.length != 0) {
-        let lat = waypoint_data[0].LAT,
-          lng = waypoint_data[0].LONG;
-        latlongs.push([lat, lng]);
-      }
-    });
+		for (i = 1; i < ICAO_codes.length; i++) {
+			if (!ICAO_codes[i]) {
+				continue;
+			}
+			let curr_code = ICAO_codes[i];
+			let prev_code = ICAO_codes[i - 1];
 
-    route_polyline.setLatLngs(latlongs);
-    addAirportsToRoutePolyline();
-  } else {
-    route_polyline.setLatLngs([]);
-    addAirportsToRoutePolyline();
-  }
-  route_polyline.bringToFront();
+			curr_code = curr_code.replaceAll(" ", "");
+			curr_code = curr_code.replaceAll("&nbsp;", "");
+			prev_code = prev_code.replaceAll(" ", "");
+			prev_code = prev_code.replaceAll("&nbsp;", "");
+
+			let curr_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == curr_code).name;
+			let prev_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == prev_code).name;
+
+			try {
+				let airway = Object.values(airways).find(airway => ((airway.start_point == prev_code_name && airway.end_point == curr_code_name) || (airway.end_point == prev_code_name && airway.start_point == curr_code_name && airway.one_way == 0)));
+				if (airway.end_point == prev_code_name && airway.start_point == curr_code_name && airway.one_way == 0) {
+					let temp_start_point = airway.start_point;
+					airway.start_point = airway.end_point;
+					airway.end_point = temp_start_point;
+					if (airway.hasOwnProperty('points')) {
+						airway.points = airway.points.reverse();
+					}
+				}
+				route_polyline.addAirway(airway);
+			} catch (err) {
+				console.log(err);
+				errors.push([prev_code_name, curr_code_name]);
+				route_polyline.hasError(true);
+			}
+
+		}
+
+		if (errors.length > 0) {
+			let errorString;
+			errors.forEach((error, i) => {
+				if (errorString) {
+					errorString += `<br>לא קיים נתיב בין ${error[0]} ו${error[1]}`;
+				} else {
+					errorString = `לא קיים נתיב בין ${error[0]} ו${error[1]}`;
+				}
+			});
+			document.getElementById("routes-errors").innerHTML = errorString;
+		}
+	} else {
+		route_polyline.removeAll();
+	}
 }
 
 var dep = "",
-  arr = "";
+	arr = "";
 
 function validateAirport(id) {
 
-  var airport_code = document.getElementById(id).innerText.toUpperCase();
+	var airport_code = document.getElementById(id).innerText.toUpperCase();
 
-  if (id == "departure" && ((airport_code.length == 3 && dep.length == 4) || (airport_code.length == 5 && dep.length == 4) || (dep.length - airport_code.length > 1)) && route_polyline.getLatLngs().length > 0) {
-    var new_polyline = route_polyline.getLatLngs();
-    new_polyline.splice(0, 1);
-    route_polyline.setLatLngs(new_polyline);
-    dep = airport_code;
+	if (id == "departure" && ((airport_code.length == 3 && dep.length == 4) || (airport_code.length == 5 && dep.length == 4) || (dep.length - airport_code.length > 1)) && route_polyline.getLatLngs().length > 0) {
+		var new_polyline = route_polyline.getLatLngs();
+		new_polyline.splice(0, 1);
+		route_polyline.setLatLngs(new_polyline);
+		dep = airport_code;
 
-  } else if (id == "arrival" && ((airport_code.length == 3 && arr.length == 4) || (airport_code.length == 5 && arr.length == 4) || (arr.length - airport_code.length > 1)) && route_polyline.getLatLngs().length > 0) {
-    var new_polyline = route_polyline.getLatLngs();
-    new_polyline.pop();
-    route_polyline.setLatLngs(new_polyline);
-    arr = airport_code;
-  }
+	} else if (id == "arrival" && ((airport_code.length == 3 && arr.length == 4) || (airport_code.length == 5 && arr.length == 4) || (arr.length - airport_code.length > 1)) && route_polyline.getLatLngs().length > 0) {
+		var new_polyline = route_polyline.getLatLngs();
+		new_polyline.pop();
+		route_polyline.setLatLngs(new_polyline);
+		arr = airport_code;
+	}
 
-  if (airport_code.length == 4) {
-    var airport = Object.values(cvfr_waypoints).filter(waypoint => (waypoint.type == "ARP" && waypoint.CODE == airport_code));
+	if (airport_code.length == 4) {
+		var airport = Object.values(cvfr_waypoints).filter(waypoint => (waypoint.type == "ARP" && waypoint.CODE == airport_code));
 
-    if (airport.length != 0) {
-      translteRoute();
+		if (airport.length != 0) {
+			translteRoute();
 
-      document.getElementById("validate-" + id).innerHTML = airport[0]["שם"];
-      if (id == "departure") {
-        dep = airport_code;
-      } else {
-        arr = airport_code;
-      }
-    }
-  } else {
-    document.getElementById("validate-" + id).innerHTML = "";
-  }
-}
-
-function addAirportsToRoutePolyline() {
-  var dep = document.getElementById("departure").innerHTML.toUpperCase(),
-    arr = document.getElementById("arrival").innerHTML.toUpperCase(),
-    array_of_points = route_polyline.getLatLngs();
-
-  if (dep) {
-    var airport = Object.values(cvfr_waypoints).filter(waypoint => waypoint.CODE == dep);
-    if (airport.length != 0) {
-      array_of_points.splice(0, 0, [airport[0].LAT, airport[0].LONG]);
-    }
-  }
-
-  if (arr) {
-    var airport = Object.values(cvfr_waypoints).filter(waypoint => waypoint.CODE == arr);
-    if (airport.length != 0) {
-      array_of_points.push([airport[0].LAT, airport[0].LONG]);
-    }
-  }
-
-  if (document.getElementById("route")) {
-    route_polyline.setLatLngs(array_of_points);
-  }
-
+			document.getElementById("validate-" + id).innerHTML = airport[0]["name"];
+			if (id == "departure") {
+				dep = airport_code;
+			} else {
+				arr = airport_code;
+			}
+		}
+	} else {
+		document.getElementById("validate-" + id).innerHTML = "";
+	}
 }
 
 function setAsDeparture(airport_code) {
-  document.getElementById("departure").innerHTML = airport_code;
-  validateAirport("departure");
-  updatePopup(airport_code, 1);
+	document.getElementById("departure").innerHTML = airport_code;
+	validateAirport("departure");
+	updatePopup(airport_code, 1);
 }
 
 function setAsArrival(airport_code) {
-  document.getElementById("arrival").innerHTML = airport_code;
-  validateAirport("arrival");
-  updatePopup(airport_code, 1);
+	document.getElementById("arrival").innerHTML = airport_code;
+	validateAirport("arrival");
+	updatePopup(airport_code, 1);
 }
 
 function updatePopup(airport_code, if_airport) {
-  let route = document.getElementById("route").innerHTML,
-    dep = document.getElementById("departure").innerHTML,
-    arr = document.getElementById("arrival").innerHTML,
-    marker_info = marker.getContent().split("<div>");
-  marker_info = marker_info[0] + "<div>" + marker_info[1];
-  if (!if_airport) {
-    marker_info = marker_info.split("</div>");
-    marker_info = marker_info[0] + "</div>" + marker_info[1];
-  }
-  if (route.includes(airport_code)) {
-    marker_info += `<div>
+	let route = document.getElementById("route").innerHTML,
+		dep = document.getElementById("departure").innerHTML,
+		arr = document.getElementById("arrival").innerHTML,
+		marker_info = marker.getContent().split("<div>");
+	marker_info = marker_info[0] + "<div>" + marker_info[1];
+	if (!if_airport) {
+		marker_info = marker_info.split("</div>");
+		marker_info = marker_info[0] + "</div>" + marker_info[1];
+	}
+	if (route.includes(airport_code)) {
+		marker_info += `<div>
           <img src="img/plan-normal.png" data-waypoint="${airport_code}" class="popup-button" onclick="removeWaypoint(this.dataset.waypoint, ${if_airport})" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
           <span class="button-text">הסר מנתיב</span>
         </div>`;
-  }
-  if (dep != airport_code && if_airport) {
-    //הוספת כפתור קבע כשדה המראה
-    marker_info += `<div>
+	}
+	if (dep != airport_code && if_airport) {
+		//הוספת כפתור קבע כשדה המראה
+		marker_info += `<div>
           <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
           <span class="button-text">קבע כשדה המראה</span>
           </div>`;
-  }
-  if (arr != airport_code && if_airport) {
-    marker_info += `<div>
+	}
+	if (arr != airport_code && if_airport) {
+		marker_info += `<div>
           <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
           <span class="button-text">קבע כשדה נחיתה</span>
         </div>`;
-  }
+	}
 
-  marker_info + "</div>";
-  marker.setContent(marker_info);
+	marker_info + "</div>";
+	marker.setContent(marker_info);
 }
 
 // // ****************************************** Take care of route box drag option

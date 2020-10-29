@@ -146,6 +146,17 @@ map.on('popupopen', function(source) {
   }
 });
 
+map.on('click', function(e) {
+  var marqueur = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map).bindPopup('{lat: ' + e.latlng.lat + ', long: ' + e.latlng.lng + '}').openPopup();
+  var copyText = document.createElement("p");
+  copyText.innerText = '{lat: ' + e.latlng.lat + ', long: ' + e.latlng.lng + '}';
+
+ copyText.select();
+
+ document.execCommand("copy");
+});
+
+
 var cvfr_map = L.tileLayer('map/{z}/{x}/{y}.png', {
   attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',
 }).addTo(map);
@@ -163,7 +174,7 @@ for (let waypoint_key in cvfr_waypoints) {
         className: 'waypoint-marker',
       })
     }).addTo(waypoints_layer);
-    curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
+    curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
                     <div>
                       <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 1)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
                       <span class="button-text">הוסף לנתיב</span>
@@ -187,7 +198,7 @@ for (let waypoint_key in cvfr_waypoints) {
         className: 'waypoint-marker',
       })
     }).addTo(waypoints_layer);
-    curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["שם"]} - ${waypoint["CODE"]}</div>
+    curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
                     <div>
                       <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
                       <span class="button-text">הוסף לנתיב</span>

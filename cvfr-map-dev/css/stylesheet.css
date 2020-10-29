@@ -184,12 +184,6 @@ body,
   color: white;
 }
 
-.inner-sidebar {
-  color: white;
-  padding-right: 10%;
-  padding-left: 10%;
-}
-
 .main-map-button {
   text-align: center;
   margin: auto;
@@ -230,7 +224,6 @@ body,
 }
 
 .charts-list {
-  padding-right: 15px;
   display: none;
 }
 
@@ -260,4 +253,10 @@ body,
 
 .leaflet-sidebar-pane {
   color: white;
+}
+.routes-errors{
+  color: indianred;
+  text-align: center;
+  font-size: 26px;
+  margin-top: 10px;
 }

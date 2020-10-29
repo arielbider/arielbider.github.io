@@ -76,3 +76,17 @@ function removeAll(){
     buttons[0].classList.replace("fa-minus-square", "fa-plus-square");
   }
 }
+
+addAirportsToToolbar();
+
+function addAirportsToToolbar(){
+  let airports = Object.values(cvfr_waypoints).filter(waypoint => waypoint.type == "ARP");
+  let dataList = '<datalist id="airports">'
+
+  airports.forEach((airport, i) => {
+    dataList += `<option value="${airport.CODE}">${airport.name}</option>`
+  });
+  dataList += '</datalist>';
+
+  document.getElementById("flight-plan").innerHTML += dataList;
+}

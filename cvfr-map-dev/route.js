@@ -48,10 +48,12 @@ class routePolyline {
 	}
 
 	addAirway(airway) {
-		this._airways.push(airway);
+    console.log(airway);
+		this._airways.push(Object.assign({}, airway));
 		if (!this.error) {
 			this._setNewPolyline();
 		}
+    console.log(this._airways);
 	}
 
 	removeAirway(airway) {
@@ -106,14 +108,16 @@ class routePolyline {
 
 var route_polyline = new routePolyline;
 
-document.getElementById('route').addEventListener('keyup', translteRoute);
+document.addEventListener("DOMContentLoaded", function() {
+	document.getElementById('route').addEventListener('keyup', translteRoute);
+});
 
 function translteRoute() {
 	let route = document.getElementById("route").innerText;
 	console.log(route);
-	let departure = document.getElementById("departure").innerText;
+	let departure = document.getElementById("departure").value;
 	departure = departure.replaceAll(" ", "");
-	let arrival = document.getElementById("arrival").innerText;
+	let arrival = document.getElementById("arrival").value;
 	departure = departure.replaceAll(" ", "");
 
 	if (route || (departure && arrival)) {
@@ -159,6 +163,7 @@ function translteRoute() {
 						airway.points = airway.points.reverse();
 					}
 				}
+
 				route_polyline.addAirway(airway);
 			} catch (err) {
 				console.log(err);
@@ -189,7 +194,7 @@ var dep = "",
 
 function validateAirport(id) {
 
-	var airport_code = document.getElementById(id).innerText.toUpperCase();
+	var airport_code = document.getElementById(id).value.toUpperCase();
 
 	if (id == "departure" && ((airport_code.length == 3 && dep.length == 4) || (airport_code.length == 5 && dep.length == 4) || (dep.length - airport_code.length > 1)) && route_polyline.getLatLngs().length > 0) {
 		var new_polyline = route_polyline.getLatLngs();
@@ -223,21 +228,21 @@ function validateAirport(id) {
 }
 
 function setAsDeparture(airport_code) {
-	document.getElementById("departure").innerHTML = airport_code;
+	document.getElementById("departure").value = airport_code;
 	validateAirport("departure");
 	updatePopup(airport_code, 1);
 }
 
 function setAsArrival(airport_code) {
-	document.getElementById("arrival").innerHTML = airport_code;
+	document.getElementById("arrival").value = airport_code;
 	validateAirport("arrival");
 	updatePopup(airport_code, 1);
 }
 
 function updatePopup(airport_code, if_airport) {
 	let route = document.getElementById("route").innerHTML,
-		dep = document.getElementById("departure").innerHTML,
-		arr = document.getElementById("arrival").innerHTML,
+		dep = document.getElementById("departure").value,
+		arr = document.getElementById("arrival").value,
 		marker_info = marker.getContent().split("<div>");
 	marker_info = marker_info[0] + "<div>" + marker_info[1];
 	if (!if_airport) {

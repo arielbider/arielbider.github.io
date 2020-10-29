@@ -75,7 +75,7 @@
         <p><br></p>
         <h3>תודות</h3>
         <p>תודה מיוחדת לבר רודוי שעזר עם המרת המפה ולימד אותי כיצד להפוך את הדפיות לשמישות כאן במערכת<br>
-        תודה גם לכל המשתמשים במערכת, זה לא מובן מאליו.</p>
+          תודה גם לכל המשתמשים במערכת, זה לא מובן מאליו.</p>
       </div>
 
       <div class="leaflet-sidebar-pane" id="charts">
@@ -96,14 +96,17 @@
 
         <div class="airport-text">
           שדה המראה:
-          <div contenteditable="true" id="departure" class="airport" onkeyup="validateAirport(this.id)"></div>
+          <!-- <div contenteditable="true" id="departure" class="airport" onkeyup="validateAirport(this.id)"></div> -->
+          <input list="airports" name="Airports" id="departure" class="airport" onchange="validateAirport(this.id)">
           <div id="validate-departure" class="airport_validate"></div>
         </div>
         <div class="airport-text">
           שדה נחיתה:
-          <div contenteditable="true" id="arrival" class="airport" onkeyup="validateAirport(this.id)"></div>
+          <!-- <div contenteditable="true" id="arrival" class="airport" onkeyup="validateAirport(this.id)"></div> -->
+          <input list="airports" name="Airports" id="arrival" class="airport" onchange="validateAirport(this.id)">
           <div id="validate-arrival" class="airport_validate"></div>
         </div>
+
         <div id="route" contenteditable="true"></div>
         <div id="routes-errors" class="routes-errors"></div>
       </div>

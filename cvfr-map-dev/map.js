@@ -146,16 +146,9 @@ map.on('popupopen', function(source) {
   }
 });
 
-map.on('click', function(e) {
-  var marqueur = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map).bindPopup('{lat: ' + e.latlng.lat + ', long: ' + e.latlng.lng + '}').openPopup();
-  var copyText = document.createElement("p");
-  copyText.innerText = '{lat: ' + e.latlng.lat + ', long: ' + e.latlng.lng + '}';
-
- copyText.select();
-
- document.execCommand("copy");
-});
-
+// map.on('click', function(e) {
+//   var marqueur = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map).bindPopup('{lat: ' + e.latlng.lat + ', long: ' + e.latlng.lng + '}').openPopup();
+// });
 
 var cvfr_map = L.tileLayer('map/{z}/{x}/{y}.png', {
   attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',

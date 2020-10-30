@@ -41,6 +41,7 @@ class routePolyline {
 		}).addTo(map);
 		this._airways = [];
 		this.error = false;
+    this.allowDirect = false;
 	}
 
 	hasError(errorBool) {
@@ -108,8 +109,11 @@ class routePolyline {
 
 var route_polyline = new routePolyline;
 
+
+
 document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById('route').addEventListener('keyup', translteRoute);
+  document.getElementById("direct-routes").addEventListener("click", changeDirectPermission);
 });
 
 function translteRoute() {
@@ -165,15 +169,23 @@ function translteRoute() {
 				}
 
 				route_polyline.addAirway(airway);
+
 			} catch (err) {
-				console.log(err);
-				errors.push([prev_code_name, curr_code_name]);
-				route_polyline.hasError(true);
+        if (!route_polyline.allowDirect){
+          console.log(err);
+          errors.push([prev_code_name, curr_code_name]);
+          route_polyline.hasError(true);
+        } else{
+          route_polyline.addAirway({
+      			start_point: prev_code_name,
+      			end_point: curr_code_name,
+      			});
+        }
 			}
 
 		}
 
-		if (errors.length > 0) {
+		if (errors.length > 0 && !route_polyline.allowDirect) {
 			let errorString;
 			errors.forEach((error, i) => {
 				if (errorString) {
@@ -188,6 +200,13 @@ function translteRoute() {
 		route_polyline.removeAll();
 	}
 }
+
+
+function changeDirectPermission(button){
+  route_polyline.allowDirect = button.srcElement.checked;
+  translteRoute();
+}
+
 
 var dep = "",
 	arr = "";

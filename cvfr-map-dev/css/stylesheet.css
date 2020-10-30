@@ -342,6 +342,15 @@ input:checked + .slider:before {
 .settings{
   margin-top: 10px
 }
+
 #settings i{
   display: inline-block;
   margin-right: 5px;
+  cursor: pointer;
+}
+
+#settings p{
+  margin-top: 0px;
+  display: none;
+  margin-bottom: 10px;
+}

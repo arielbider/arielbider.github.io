@@ -136,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function translateRoute() {
 	let route = document.getElementById("route").innerText;
-	console.log(route);
 	let departure = document.getElementById("departure").value;
 	departure = departure.replaceAll(" ", "");
 	let arrival = document.getElementById("arrival").value;
@@ -275,7 +274,6 @@ var userPointsEvent = function(e) {
 
 function changeUserPointPermission(button) {
 	route_polyline.allowUserPoints = button.srcElement.checked;
-	console.log(route_polyline.allowUserPoints);
 	let route = document.getElementById("route").innerHTML;
 	let rgex = /POINT.+ /gm;
 	route.replaceAll(rgex, '');

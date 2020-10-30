@@ -331,8 +331,17 @@ input:checked + .slider:before {
 
 #settings h3 {
   display: inline-block;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .switch{
   margin-right: 10px;
 }
+
+.settings{
+  margin-top: 10px
+}
+#settings i{
+  display: inline-block;
+  margin-right: 5px;

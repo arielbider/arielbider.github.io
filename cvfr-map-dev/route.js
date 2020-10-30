@@ -41,7 +41,8 @@ class routePolyline {
 		}).addTo(map);
 		this._airways = [];
 		this.error = false;
-    this.allowDirect = false;
+		this.allowDirect = false;
+		this.allowUserPoints = false;
 	}
 
 	hasError(errorBool) {
@@ -49,12 +50,12 @@ class routePolyline {
 	}
 
 	addAirway(airway) {
-    console.log(airway);
+		console.log(airway);
 		this._airways.push(Object.assign({}, airway));
 		if (!this.error) {
 			this._setNewPolyline();
 		}
-    console.log(this._airways);
+		console.log(this._airways);
 	}
 
 	removeAirway(airway) {
@@ -75,6 +76,9 @@ class routePolyline {
 
 		this._airways.forEach((airway, i) => {
 			let coords = this._getCoordsOfAirway(airway);
+
+			if (airway.start) {}
+
 			if (i == 0) {
 				latLongs.push([coords.start_point.lat, coords.start_point.long]);
 			}
@@ -92,8 +96,21 @@ class routePolyline {
 	}
 
 	_getCoordsOfAirway(airway) {
-		let point1 = Object.values(cvfr_waypoints).find(waypoint => waypoint["name"] == airway.start_point);
-		let point2 = Object.values(cvfr_waypoints).find(waypoint => waypoint["name"] == airway.end_point);
+		let point1, point2;
+
+		if (/POINT.+/.test(airway.start_point) && /POINT.+/.test(airway.end_point)) {
+			point1 = Object.values(userPoints).find(waypoint => waypoint.name == airway.start_point);
+			point2 = Object.values(userPoints).find(waypoint => waypoint.name == airway.end_point);
+		} else if (/POINT.+/.test(airway.end_point)) {
+			point1 = Object.values(cvfr_waypoints).find(waypoint => waypoint["name"] == airway.start_point);
+			point2 = Object.values(userPoints).find(waypoint => waypoint.name == airway.end_point);
+		} else if (/POINT.+/.test(airway.start_point)) {
+			point1 = Object.values(userPoints).find(waypoint => waypoint.name == airway.start_point);
+			point2 = Object.values(cvfr_waypoints).find(waypoint => waypoint["name"] == airway.end_point);
+		} else {
+			point1 = Object.values(cvfr_waypoints).find(waypoint => waypoint["name"] == airway.start_point);
+			point2 = Object.values(cvfr_waypoints).find(waypoint => waypoint["name"] == airway.end_point);
+		}
 		return {
 			start_point: {
 				lat: point1.LAT,
@@ -113,7 +130,8 @@ var route_polyline = new routePolyline;
 
 document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById('route').addEventListener('keyup', translteRoute);
-  document.getElementById("direct-routes").addEventListener("click", changeDirectPermission);
+	document.getElementById("direct-routes").addEventListener("click", changeDirectPermission);
+	document.getElementById("user-points").addEventListener("click", changeUserPointPermission);
 });
 
 function translteRoute() {
@@ -154,38 +172,59 @@ function translteRoute() {
 			prev_code = prev_code.replaceAll(" ", "");
 			prev_code = prev_code.replaceAll("&nbsp;", "");
 
-			let curr_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == curr_code).name;
-			let prev_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == prev_code).name;
+			if (/POINT.+/gm.test(curr_code) && route_polyline.allowUserPoints) {
+				let prev_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == prev_code).name;
+				route_polyline.addAirway({
+					start_point: prev_code_name,
+					end_point: curr_code
+				});
+			} else if (/POINT.+/gm.test(prev_code) && route_polyline.allowUserPoints) {
+				let curr_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == curr_code).name;
+				route_polyline.addAirway({
+					start_point: prev_code,
+					end_point: curr_code_name
+				});
 
-			try {
-				let airway = Object.values(airways).find(airway => ((airway.start_point == prev_code_name && airway.end_point == curr_code_name) || (airway.end_point == prev_code_name && airway.start_point == curr_code_name && airway.one_way == 0)));
-				if (airway.end_point == prev_code_name && airway.start_point == curr_code_name && airway.one_way == 0) {
-					let temp_start_point = airway.start_point;
-					airway.start_point = airway.end_point;
-					airway.end_point = temp_start_point;
-					if (airway.hasOwnProperty('points')) {
-						airway.points = airway.points.reverse();
+			} else if (/POINT.+/gm.test(curr_code) && /POINT.+/gm.test(prev_code) && route_polyline.allowUserPoints) {
+				route_polyline.addAirway({
+					start_point: prev_code,
+					end_point: curr_code
+				});
+			} else {
+				let curr_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == curr_code).name;
+				let prev_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == prev_code).name;
+
+				try {
+
+					let airway = Object.values(airways).find(airway => ((airway.start_point == prev_code_name && airway.end_point == curr_code_name) || (airway.end_point == prev_code_name && airway.start_point == curr_code_name && airway.one_way == 0)));
+					if (airway.end_point == prev_code_name && airway.start_point == curr_code_name && airway.one_way == 0) {
+						let temp_start_point = airway.start_point;
+						airway.start_point = airway.end_point;
+						airway.end_point = temp_start_point;
+						if (airway.hasOwnProperty('points')) {
+							airway.points = airway.points.reverse();
+						}
+					}
+
+					route_polyline.addAirway(airway);
+
+				} catch (err) {
+					if (!route_polyline.allowDirect) {
+						console.log(err);
+						errors.push([prev_code_name, curr_code_name]);
+						route_polyline.hasError(true);
+					} else {
+						route_polyline.addAirway({
+							start_point: prev_code_name,
+							end_point: curr_code_name,
+						});
 					}
 				}
-
-				route_polyline.addAirway(airway);
-
-			} catch (err) {
-        if (!route_polyline.allowDirect){
-          console.log(err);
-          errors.push([prev_code_name, curr_code_name]);
-          route_polyline.hasError(true);
-        } else{
-          route_polyline.addAirway({
-      			start_point: prev_code_name,
-      			end_point: curr_code_name,
-      			});
-        }
 			}
 
 		}
 
-		if (errors.length > 0 && !route_polyline.allowDirect) {
+		if (errors.length > 0) {
 			let errorString;
 			errors.forEach((error, i) => {
 				if (errorString) {
@@ -202,11 +241,53 @@ function translteRoute() {
 }
 
 
-function changeDirectPermission(button){
-  route_polyline.allowDirect = button.srcElement.checked;
-  translteRoute();
+function changeDirectPermission(button) {
+	route_polyline.allowDirect = button.srcElement.checked;
+	translteRoute();
 }
 
+var userPointsEvent = function(e) {
+	let pointName = `POINT${(userPoints.length+1)}`;
+	let customMarker = new userMarker([e.latlng.lat, e.latlng.lng], {
+		name: pointName
+	}).addTo(map).bindPopup(`<div class="waypoint_popup" id="${pointName}-div"><div class="airport-name">${pointName}</div>
+                <div>
+                  <img src="img/plan-normal.png" data-waypoint="${pointName}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+                  <span class="button-text">הוסף לנתיב</span>
+                </div>
+              </div>`).openPopup();
+
+	customMarker.on("dblclick", function(e) {
+		console.log(e.target.options.name);
+		customMarker.removeFrom(map);
+		let index = userPoints.findIndex(point => point.name == e.target.options.name);
+		userPoints.splice(index, 1);
+		translteRoute();
+	});
+
+	userPoints.push({
+		name: pointName,
+		marker: customMarker,
+    LAT: e.latlng.lat,
+    LONG: e.latlng.lng
+	});
+};
+
+function changeUserPointPermission(button) {
+	route_polyline.allowUserPoints = button.srcElement.checked;
+	console.log(route_polyline.allowUserPoints);
+	let route = document.getElementById("route").innerHTML;
+	let rgex = /POINT.+ /gm;
+	route.replaceAll(rgex, '');
+
+	if (route_polyline.allowUserPoints) {
+		map.on('click', userPointsEvent);
+	} else {
+		map.off('click', userPointsEvent);
+	}
+
+	translteRoute();
+}
 
 var dep = "",
 	arr = "";

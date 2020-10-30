@@ -6,7 +6,7 @@ function addWaypoint(id, if_airport) {
 	}
 
 	updatePopup(id, if_airport);
-	translteRoute();
+	translateRoute();
 }
 
 function removeWaypoint(id, if_airport) {
@@ -27,7 +27,7 @@ function removeWaypoint(id, if_airport) {
 
 		document.getElementById("route").innerHTML = route_string_as_Array.join('');
 		updatePopup(id, if_airport);
-		translteRoute();
+		translateRoute();
 	}
 }
 
@@ -129,12 +129,12 @@ var route_polyline = new routePolyline;
 
 
 document.addEventListener("DOMContentLoaded", function() {
-	document.getElementById('route').addEventListener('keyup', translteRoute);
+	document.getElementById('route').addEventListener('keyup', translateRoute);
 	document.getElementById("direct-routes").addEventListener("click", changeDirectPermission);
 	document.getElementById("user-points").addEventListener("click", changeUserPointPermission);
 });
 
-function translteRoute() {
+function translateRoute() {
 	let route = document.getElementById("route").innerText;
 	console.log(route);
 	let departure = document.getElementById("departure").value;
@@ -243,7 +243,7 @@ function translteRoute() {
 
 function changeDirectPermission(button) {
 	route_polyline.allowDirect = button.srcElement.checked;
-	translteRoute();
+	translateRoute();
 }
 
 var userPointsEvent = function(e) {
@@ -262,7 +262,7 @@ var userPointsEvent = function(e) {
 		customMarker.removeFrom(map);
 		let index = userPoints.findIndex(point => point.name == e.target.options.name);
 		userPoints.splice(index, 1);
-		translteRoute();
+		translateRoute();
 	});
 
 	userPoints.push({
@@ -286,7 +286,7 @@ function changeUserPointPermission(button) {
 		map.off('click', userPointsEvent);
 	}
 
-	translteRoute();
+	translateRoute();
 }
 
 var dep = "",
@@ -296,16 +296,18 @@ function validateAirport(id) {
 
 	var airport_code = document.getElementById(id).value.toUpperCase();
 
-	if (id == "departure" && ((airport_code.length == 3 && dep.length == 4) || (airport_code.length == 5 && dep.length == 4) || (dep.length - airport_code.length > 1)) && route_polyline.getLatLngs().length > 0) {
-		var new_polyline = route_polyline.getLatLngs();
-		new_polyline.splice(0, 1);
-		route_polyline.setLatLngs(new_polyline);
+	if (id == "departure" && ((airport_code.length == 3 && dep.length == 4) || (airport_code.length == 5 && dep.length == 4) || (dep.length - airport_code.length > 1)) && route_polyline._polyline.getLatLngs().length > 0) {
+		// var new_polyline = route_polyline._polyline.getLatLngs();
+		// new_polyline.splice(0, 1);
+		// route_polyline._polyline.setLatLngs(new_polyline);
+    translateRoute();
 		dep = airport_code;
 
-	} else if (id == "arrival" && ((airport_code.length == 3 && arr.length == 4) || (airport_code.length == 5 && arr.length == 4) || (arr.length - airport_code.length > 1)) && route_polyline.getLatLngs().length > 0) {
-		var new_polyline = route_polyline.getLatLngs();
-		new_polyline.pop();
-		route_polyline.setLatLngs(new_polyline);
+	} else if (id == "arrival" && ((airport_code.length == 3 && arr.length == 4) || (airport_code.length == 5 && arr.length == 4) || (arr.length - airport_code.length > 1)) && route_polyline._polyline.getLatLngs().length > 0) {
+		// var new_polyline = route_polyline._polyline.getLatLngs();
+		// new_polyline.pop();
+		// route_polyline._polyline.setLatLngs(new_polyline);
+    translateRoute();
 		arr = airport_code;
 	}
 
@@ -313,7 +315,9 @@ function validateAirport(id) {
 		var airport = Object.values(cvfr_waypoints).filter(waypoint => (waypoint.type == "ARP" && waypoint.CODE == airport_code));
 
 		if (airport.length != 0) {
-			translteRoute();
+			translateRoute();
+
+      document.getElementById(id).blur();
 
 			document.getElementById("validate-" + id).innerHTML = airport[0]["name"];
 			if (id == "departure") {

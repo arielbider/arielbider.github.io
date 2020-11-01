@@ -354,36 +354,6 @@ input:checked+.slider:before {
   margin-bottom: 10px;
 }
 
-/* .fa-trash-alt {
-  text-align: center;
-  margin: auto;
-  display: inline-block;
-  width: 100%;
-}
-
-a.button3 {
-  display: inline-block;
-  padding: 0.3em 1em;
-  margin: 0 0.3em 0.3em 0;
-  border-radius: 0.5em;
-  box-sizing: border-box;
-  text-decoration: none;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 300;
-  color: #FFFFFF;
-  background-color: mediumspringgreen;
-  text-align: center;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-@media all and (max-width:30em) {
-  a.button3 {
-    display: block;
-    margin: 0.2em auto;
-  }
-} */
-
 .speed-time-button{
   font-family: 'Assistant', sans-serif;
   display: inline-block;
@@ -399,5 +369,5 @@ a.button3 {
   font-size: 18px;
   padding-left: 5px;
   margin-left: 15px;
-  vertical-align: text-bottom;
+  vertical-align: bottom;
 }

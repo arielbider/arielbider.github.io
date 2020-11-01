@@ -900,14 +900,14 @@ var airways =
 				}, {
 					lat: 31.300872727442165,
 					long: 34.81650352128782
-				}, {
-					lat: 31.293098567089896,
-					long: 34.82594489702024
 				},
 				{
 					lat: 31.299039263558882,
 					long: 34.820480341441005
-        },
+        }, {
+					lat: 31.293098567089896,
+					long: 34.82594489702024
+				},
 				{
 					lat: 31.291387191547074,
 					long: 34.826488489634364
@@ -2562,5 +2562,38 @@ var airways =
 			to_altitude: 1000,
 			from_altitude: 1500,
 			one_way: 0
-		}
+		}, {
+			start_point: "הבונים",
+			end_point: "החותרים",
+			army_airway: 0,
+			on_atc_approval: 0,
+			to_altitude: 1000,
+			from_altitude: 1500,
+			one_way: 0,
+			points: [{
+				lat: 32.69175309185039,
+				long: 34.95071413053666
+			}, {
+				lat: 32.713220723530654,
+				long: 34.95082857494708
+			}, {
+				lat: 32.72274954004707,
+				long: 34.94567873363849
+			}, {
+				lat: 32.73892991054773,
+				long: 34.94862558029127
+			}]
+  }, {
+			start_point: "הבונים",
+			end_point: "צומת פורדיס",
+			army_airway: 0,
+			on_atc_approval: 0,
+			to_altitude: 0,
+			from_altitude: 0,
+			one_way: 0,
+			points: [{
+				lat: 32.622918401947885,
+				long: 34.93103026819882
+			}]
+}
   ];

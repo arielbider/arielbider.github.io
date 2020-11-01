@@ -102,3 +102,16 @@ for (i = 0; i < helpButtons.length; i++) {
 		}
   });
 }
+
+// function getIaaWeather(){
+// 	url = "https://ims.gov.il/aviation_data";
+// 	let frame = document.createElement("iframe");
+// 	frame.sandbox = "allow-same-origin allow-scripts";
+// 	frame.id = "weather";
+// 	frame.src = url;
+// 	console.log(frame);
+// 	document.getElementsByClassName("settings")[0].append(frame);
+// 	let frameInside = document.getElementsByTagName("iframe")[0];
+// 	let textTables = frameInside.contentWindow;
+// 	console.log(textTables);
+// }

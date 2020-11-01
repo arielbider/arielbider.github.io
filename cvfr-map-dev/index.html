@@ -97,11 +97,22 @@
           <input list="airports" name="Airports" id="departure" class="airport" onchange="validateAirport(this.id)">
           <div id="validate-departure" class="airport_validate"></div>
         </div>
+
         <div class="airport-text">
           שדה נחיתה:
           <!-- <div contenteditable="true" id="arrival" class="airport" onkeyup="validateAirport(this.id)"></div> -->
           <input list="airports" name="Airports" id="arrival" class="airport" onchange="validateAirport(this.id)">
           <div id="validate-arrival" class="airport_validate"></div>
+        </div>
+
+        <div class="time-speed">
+          <label>מהירות:</label>
+          <input type="text" class="speed-time-button" placeholder="110" id="speed">
+          <label>זמן יציאה:</label>
+          <input type="time" id="departure-time" class="speed-time-button" id="departure-time">
+          <br>
+          <label>זמן הגעה משוער:</label>
+          <div class="speed-time-button" id="arrival-time"></div>
         </div>
 
         <div id="route" contenteditable="true"></div>
@@ -121,7 +132,7 @@
             </label>
             <i class="far fa-question-circle"></i>
             <br>
-            <p id="direct-routes-help">על מנת שיהיה אפשר לבחור בנתיבים שלא בהכרח עובדים בין נקודות שיש בניהם נתיב, לחצו על הכפתור למעלה.</p>
+            <p id="direct-routes-help">על מנת שיהיה אפשר לבחור בנתיבים שלא בהכרח עוברים בין נקודות שיש בניהם נתיב, לחצו על הכפתור למעלה.</p>
           </div>
 
           <div>
@@ -132,7 +143,8 @@
             </label>
             <i class="far fa-question-circle"></i>
             <br>
-            <p>אם אתם רוצים להוסיף נקודות משלכם לנתיב, לחצו על הכפתור למעלה. תוכלו להוסיף אותם למסלול על ידי הוספה שלהם למסלול כמו כל נקודה רגילה, או לחילופין להקליד את שם הנקודה בפורמט {שם נקודה}POINT.</p>
+            <p>אם אתם רוצים להוסיף נקודות משלכם לנתיב, לחצו על הכפתור למעלה. תוכלו להוסיף נקודה למפה על ידי לחיצה אחת על המפה, ובמקום עליו לחצתם תופיע נקודה. כדי להוריד אותה, צריך ללחוץ על הנקודה פעמיים. תוכלו להוסיף נקודות למסלול על ידי הוספה שלהם
+              למסלול כמו כל נקודה רגילה, או לחילופין להקליד את שם הנקודה בפורמט {שם נקודה}POINT.</p>
           </div>
         </div>
       </div>

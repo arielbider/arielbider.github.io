@@ -1809,5 +1809,15 @@ cvfr_waypoints =
         "LONG": 35.0063531,
         "LAT": 29.7254847,
         "atc_switch": null
+    },
+    "הבונים": {
+        "name": "הבונים",
+        "type": "ARP",
+        "EAST": "",
+        "NORTH": "",
+        "CODE": "LLBO",
+        "LONG": 34.93280405178667,
+        "LAT": 32.64949301191411,
+        "atc_switch": null
     }
 };

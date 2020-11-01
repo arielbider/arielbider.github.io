@@ -160,6 +160,14 @@ var cvfr_map = L.tileLayer('map/{z}/{x}/{y}.png', {
 
 var waypoints_layer = new L.FeatureGroup().addTo(map);
 
+map.on("zoomend", function(){
+	if(map.getZoom() < 11 && map.hasLayer(waypoints_layer)){
+		waypoints_layer.remove();
+	} else {
+		waypoints_layer.addTo(map);
+	}
+});
+
 for (let waypoint_key in cvfr_waypoints) {
 	let waypoint = cvfr_waypoints[waypoint_key];
 

@@ -150,10 +150,6 @@ map.on('popupopen', function(source) {
 	}
 });
 
-var userPoints = Array();
-
-var userMarker = L.Marker.extend({options: {name: ""}});
-
 var cvfr_map = L.tileLayer('map/{z}/{x}/{y}.png', {
 	attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',
 }).addTo(map);

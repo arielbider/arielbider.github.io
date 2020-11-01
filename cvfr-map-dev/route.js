@@ -32,9 +32,9 @@ function removeWaypoint(id, if_airport) {
 }
 
 class routePolyline {
-	constructor() {
+	constructor(color) {
 		this._polyline = new L.Polyline([], {
-			color: 'rgb(255,0,255)',
+			color: color,
 			weight: 10,
 			opacity: 0.5,
 			id: 'route_polyline'
@@ -47,6 +47,10 @@ class routePolyline {
 
 	hasError(errorBool) {
 		this.error = errorBool;
+	}
+
+	isError() {
+		return this.error;
 	}
 
 	addAirway(airway) {
@@ -124,8 +128,8 @@ class routePolyline {
 	}
 }
 
-var route_polyline = new routePolyline;
-
+var route_polyline = new routePolyline("rgb(255,0,255)");
+var route_polyline_error = new routePolyline("rgb(220,20,60)");
 
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -154,9 +158,12 @@ function translateRoute() {
 		}
 		console.log(ICAO_codes);
 		let i;
+
 		route_polyline.removeAll();
+		route_polyline_error.removeAll();
 
 		route_polyline.hasError(false);
+
 		document.getElementById("routes-errors").innerHTML = "";
 
 		for (i = 1; i < ICAO_codes.length; i++) {
@@ -173,28 +180,48 @@ function translateRoute() {
 
 			if (/POINT.+/gm.test(curr_code) && route_polyline.allowUserPoints) {
 				let prev_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == prev_code).name;
-				route_polyline.addAirway({
-					start_point: prev_code_name,
-					end_point: curr_code
-				});
+
+				if (!route_polyline.isError()) {
+					route_polyline.addAirway({
+						start_point: prev_code_name,
+						end_point: curr_code
+					});
+				} else {
+					route_polyline_error.addAirway({
+						start_point: prev_code_name,
+						end_point: curr_code
+					});
+				}
 			} else if (/POINT.+/gm.test(prev_code) && route_polyline.allowUserPoints) {
 				let curr_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == curr_code).name;
-				route_polyline.addAirway({
-					start_point: prev_code,
-					end_point: curr_code_name
-				});
-
+				if (!route_polyline.isError()) {
+					route_polyline.addAirway({
+						start_point: prev_code,
+						end_point: curr_code_name
+					});
+				} else {
+					route_polyline_error.addAirway({
+						start_point: prev_code,
+						end_point: curr_code_name
+					});
+				}
 			} else if (/POINT.+/gm.test(curr_code) && /POINT.+/gm.test(prev_code) && route_polyline.allowUserPoints) {
-				route_polyline.addAirway({
-					start_point: prev_code,
-					end_point: curr_code
-				});
+				if (!route_polyline.isError()) {
+					route_polyline.addAirway({
+						start_point: prev_code,
+						end_point: curr_code
+					});
+				} else {
+					route_polyline_error.addAirway({
+						start_point: prev_code,
+						end_point: curr_code
+					});
+				}
 			} else {
 				let curr_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == curr_code).name;
 				let prev_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == prev_code).name;
 
 				try {
-
 					let airway = Object.values(airways).find(airway => ((airway.start_point == prev_code_name && airway.end_point == curr_code_name) || (airway.end_point == prev_code_name && airway.start_point == curr_code_name && airway.one_way == 0)));
 					if (airway.end_point == prev_code_name && airway.start_point == curr_code_name && airway.one_way == 0) {
 						let temp_start_point = airway.start_point;
@@ -204,20 +231,29 @@ function translateRoute() {
 							airway.points = airway.points.reverse();
 						}
 					}
-
-					route_polyline.addAirway(airway);
-
+					if (!route_polyline.isError()) {
+						route_polyline.addAirway(airway);
+					} else {
+						route_polyline_error.addAirway(airway);
+					}
 				} catch (err) {
 					if (!route_polyline.allowDirect) {
 						console.log(err);
 						errors.push([prev_code_name, curr_code_name]);
 						route_polyline.hasError(true);
+
+						route_polyline_error.addAirway({
+							start_point: prev_code_name,
+							end_point: curr_code_name,
+						});
+
 					} else {
 						route_polyline.addAirway({
 							start_point: prev_code_name,
 							end_point: curr_code_name,
 						});
 					}
+					console.log("here");
 				}
 			}
 
@@ -236,6 +272,7 @@ function translateRoute() {
 		}
 	} else {
 		route_polyline.removeAll();
+		route_polyline_error.removeAll();
 	}
 
 	calculateTime();
@@ -247,11 +284,20 @@ function changeDirectPermission(button) {
 	translateRoute();
 }
 
+var userPoints = Array(),
+	userPointsLayer = new L.FeatureGroup().addTo(map);
+
+var userMarker = L.Marker.extend({
+	options: {
+		name: ""
+	}
+});
+
 var userPointsEvent = function(e) {
 	let pointName = `POINT${(userPoints.length+1)}`;
 	let customMarker = new userMarker([e.latlng.lat, e.latlng.lng], {
 		name: pointName
-	}).addTo(map).bindPopup(`<div class="waypoint_popup" id="${pointName}-div"><div class="airport-name">${pointName}</div>
+	}).addTo(userPointsLayer).bindPopup(`<div class="waypoint_popup" id="${pointName}-div"><div class="airport-name">${pointName}</div>
                 <div>
                   <img src="img/plan-normal.png" data-waypoint="${pointName}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
                   <span class="button-text">הוסף לנתיב</span>
@@ -282,8 +328,10 @@ function changeUserPointPermission(button) {
 
 	if (route_polyline.allowUserPoints) {
 		map.on('click', userPointsEvent);
+		userPointsLayer.addTo(map);
 	} else {
 		map.off('click', userPointsEvent);
+		userPointsLayer.remove();
 	}
 
 	translateRoute();
@@ -386,7 +434,7 @@ function calculateTime() {
 
 	let departureTime = document.getElementById("departure-time").value;
 
-	if (departureTime == ""){
+	if (departureTime == "") {
 		document.getElementById("arrival-time").innerHTML = "";
 		return;
 	}
@@ -401,12 +449,12 @@ function calculateTime() {
 		distance += getDistance(allPoints[i].lat, allPoints[i].lng, allPoints[i + 1].lat, allPoints[i + 1].lng);
 	}
 
-	distance = distance/1.852; // Distance in nautical miles
+	distance = distance / 1.852; // Distance in nautical miles
 
-	let time = distance/airspeed;
-	departureTime[0] += time%24 - time%24%1;
+	let time = distance / airspeed;
+	departureTime[0] += time % 24 - time % 24 % 1;
 
-	departureTime[1] += Math.round((time%1)*60);
+	departureTime[1] += Math.round((time % 1) * 60);
 
 	departureTime[1] < 10 ? departureTime[1] = "0" + departureTime[1] : departureTime[1];
 

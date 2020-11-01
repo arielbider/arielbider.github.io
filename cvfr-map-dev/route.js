@@ -178,17 +178,15 @@ function translateRoute() {
 			prev_code = prev_code.replaceAll(" ", "");
 			prev_code = prev_code.replaceAll("&nbsp;", "");
 
-			if (/POINT.+/gm.test(curr_code) && route_polyline.allowUserPoints) {
-				let prev_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == prev_code).name;
-
+			if (/POINT.+/gm.test(curr_code) && /POINT.+/gm.test(prev_code) && route_polyline.allowUserPoints) {
 				if (!route_polyline.isError()) {
 					route_polyline.addAirway({
-						start_point: prev_code_name,
+						start_point: prev_code,
 						end_point: curr_code
 					});
 				} else {
 					route_polyline_error.addAirway({
-						start_point: prev_code_name,
+						start_point: prev_code,
 						end_point: curr_code
 					});
 				}
@@ -205,15 +203,17 @@ function translateRoute() {
 						end_point: curr_code_name
 					});
 				}
-			} else if (/POINT.+/gm.test(curr_code) && /POINT.+/gm.test(prev_code) && route_polyline.allowUserPoints) {
+			} else if (/POINT.+/gm.test(curr_code) && route_polyline.allowUserPoints) {
+				let prev_code_name = Object.values(cvfr_waypoints).find(waypoint => waypoint.CODE == prev_code).name;
+
 				if (!route_polyline.isError()) {
 					route_polyline.addAirway({
-						start_point: prev_code,
+						start_point: prev_code_name,
 						end_point: curr_code
 					});
 				} else {
 					route_polyline_error.addAirway({
-						start_point: prev_code,
+						start_point: prev_code_name,
 						end_point: curr_code
 					});
 				}
@@ -322,9 +322,7 @@ var userPointsEvent = function(e) {
 
 function changeUserPointPermission(button) {
 	route_polyline.allowUserPoints = button.srcElement.checked;
-	let route = document.getElementById("route").innerHTML;
-	let rgex = /POINT.+ /gm;
-	route.replaceAll(rgex, '');
+	let route = document.getElementById("route").innerText;
 
 	if (route_polyline.allowUserPoints) {
 		map.on('click', userPointsEvent);
@@ -332,6 +330,13 @@ function changeUserPointPermission(button) {
 	} else {
 		map.off('click', userPointsEvent);
 		userPointsLayer.remove();
+
+		userPoints.forEach((point, i) => {
+			route = route.replaceAll(point.name, "");
+		});
+
+		console.log("route " + route);
+		document.getElementById("route").innerText = route;
 	}
 
 	translateRoute();

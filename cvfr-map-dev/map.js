@@ -223,12 +223,13 @@ var url;
 
 document.getElementById("user-aircraft").addEventListener("click", function() {
 	if(this.checked){
-		ip = document.getElementById("ipAddress").value;
-		if(ip){
-			url= `http://${ip}:2020/`;
-		} else {
-			url = "http://localhost:2020/";
-		}
+		// ip = document.getElementById("ipAddress").value;
+		// if(ip){
+		// 	url= `http://${ip}:2020/`;
+		// } else {
+		// 	url = "http://localhost:2020/";
+		// }
+		url = "http://localhost:2020/";
 		getAirplaneFromSim;
 		intervalAircraftData = setInterval(getAirplaneFromSim, 5000);
 	} else {

@@ -231,7 +231,7 @@ document.getElementById("user-aircraft").addEventListener("click", function() {
 		// }
 		url = "http://localhost:2020/";
 		getAirplaneFromSim;
-		intervalAircraftData = setInterval(getAirplaneFromSim, 5000);
+		intervalAircraftData = setInterval(getAirplaneFromSim, 1000);
 	} else {
 		clearInterval(intervalAircraftData);
 		userAircraft.remove();
@@ -241,7 +241,6 @@ document.getElementById("user-aircraft").addEventListener("click", function() {
 function getAirplaneFromSim() {
 
 	var con = new XMLHttpRequest();
-
 	con.onreadystatechange = function() {
 		if (con.readyState == XMLHttpRequest.DONE) {
 			console.log(con.responseText);

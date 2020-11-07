@@ -354,7 +354,7 @@ input:checked+.slider:before {
   margin-bottom: 10px;
 }
 
-.speed-time-button{
+.speed-time-button {
   font-family: 'Assistant', sans-serif;
   display: inline-block;
   width: 75px;
@@ -372,16 +372,16 @@ input:checked+.slider:before {
   vertical-align: bottom;
 }
 
-.userAircraft{
+.userAircraft {
   width: 100%;
 }
 
-.userAircraft-marker{
+.userAircraft-marker {
   background-color: transparent;
   border: transparent;
 }
 
-.ipAddress{
+.ipAddress {
   text-align: center;
   border: solid rgb(153, 153, 153);
   border-radius: 4px;
@@ -393,10 +393,18 @@ input:checked+.slider:before {
   direction: ltr;
 }
 
-.leaflet-marker-pane > * {
+.leaflet-marker-pane>* {
   -webkit-transition: transform .3s linear;
   -moz-transition: transform .3s linear;
   -o-transition: transform .3s linear;
   -ms-transition: transform .3s linear;
   transition: transform .3s linear;
+}
+
+.warning {
+  color: indianred;
+  font-weight: bold;
+  text-align: center;
+  font-size: 40px;
+  margin: 0;
 }

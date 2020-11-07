@@ -48,20 +48,20 @@ var activeLayers = [];
 function changeAddRemove(node) {
 	if (node.classList.contains("fa-plus-square")) {
 		node.classList.replace("fa-plus-square", "fa-minus-square");
-		url = node.parentNode.getElementsByTagName("a")[0].dataset.url;
-		fullURL = 'charts/' + url;
+		chartUrl = node.parentNode.getElementsByTagName("a")[0].dataset.url;
+		fullURL = 'charts/' + chartUrl;
 		fullURL += '/{z}/{x}/{y}.png';
 		layerToMap = L.tileLayer(fullURL, {
 			attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',
 		}).addTo(map);
 		activeLayers.push({
-			"url": url,
+			"url": chartUrl,
 			"layer": layerToMap
 		});
 	} else {
 		node.classList.replace("fa-minus-square", "fa-plus-square");
-		url = node.parentNode.getElementsByTagName("a")[0].dataset.url;
-		index = activeLayers.findIndex(layer => layer.url == url);
+		chartUrl = node.parentNode.getElementsByTagName("a")[0].dataset.url;
+		index = activeLayers.findIndex(layer => layer.url == chartUrl);
 		activeLayers[index].layer.remove();
 		activeLayers.splice(index, 1);
 	}
@@ -94,6 +94,7 @@ function addAirportsToToolbar() {
 let helpButtons = document.getElementsByClassName("fa-question-circle");
 for (i = 0; i < helpButtons.length; i++) {
 	helpButtons[i].addEventListener("click", function() {
+		console.log(this.parentNode);
 		let ifDisplayed = this.parentNode.getElementsByTagName("p")[0].style.display;
 		if (ifDisplayed == "none" || ifDisplayed == "") {
 			this.parentNode.getElementsByTagName("p")[0].style.display = "block";

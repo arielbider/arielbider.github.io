@@ -219,7 +219,7 @@ var userAircraft = L.marker([], {
 	})
 });
 var intervalAircraftData;
-var url;
+var simURL;
 var mapControl;
 var focusOnAircraft = false;
 
@@ -227,12 +227,12 @@ document.getElementById("user-aircraft").addEventListener("click", function() {
 	if (this.checked) {
 		// ip = document.getElementById("ipAddress").value;
 		// if(ip){
-		// 	url= `http://${ip}:2020/`;
+		// 	simURL= `http://${ip}:2020/`;
 		// } else {
-		// 	url = "http://localhost:2020/";
+		// 	simURL = "http://localhost:2020/";
 		// }
-		url = "http://localhost:2020/";
-
+		simURL = "http://localhost:2020/";
+		
 		mapControl = L.easyButton('fas fa-location-arrow', function() {
 			if (focusOnAircraft) {
 				focusOnAircraft = false;

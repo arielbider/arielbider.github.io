@@ -371,3 +371,24 @@ input:checked+.slider:before {
   margin-left: 15px;
   vertical-align: bottom;
 }
+
+.userAircraft{
+  width: 100%;
+}
+
+.userAircraft-marker{
+  background-color: transparent;
+  border: transparent;
+}
+
+.ipAddress{
+  text-align: center;
+  border: solid rgb(153, 153, 153);
+  border-radius: 4px;
+  border-width: 1px;
+  height: 25px;
+  width: 150px;
+  font-family: 'Assistant', sans-serif;
+  font-size: 20px;
+  direction: ltr;
+}

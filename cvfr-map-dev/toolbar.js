@@ -115,3 +115,16 @@ for (i = 0; i < helpButtons.length; i++) {
 // 	let textTables = frameInside.contentWindow;
 // 	console.log(textTables);
 // }
+
+// function Weather(code) {
+// 	this.code = code;
+// 	this.metar = "No Data";
+// 	this.taf = "No Data";
+// 	get: function(ICAO_code){
+// 		return {metar: this.metar, taf: this.taf};
+// 	};
+// 	private getData(){
+// 		var metarURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&hoursBeforeNow=3&mostRecent=true&stationString=" + code;
+// 		var tafURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow=3&timeType=issue&mostRecent=true&stationString=" + code;
+// 	};
+// };

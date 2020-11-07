@@ -156,8 +156,8 @@ var cvfr_map = L.tileLayer('map/{z}/{x}/{y}.png', {
 
 var waypoints_layer = new L.FeatureGroup().addTo(map);
 
-map.on("zoomend", function(){
-	if(map.getZoom() < 11 && map.hasLayer(waypoints_layer)){
+map.on("zoomend", function() {
+	if (map.getZoom() < 11 && map.hasLayer(waypoints_layer)) {
 		waypoints_layer.remove();
 	} else {
 		waypoints_layer.addTo(map);
@@ -208,57 +208,49 @@ for (let waypoint_key in cvfr_waypoints) {
 	}
 }
 
-// function resizeLayers(multiplyBy) {
-//     //waypoints_layer.getLayers().length
-//     if (altitude_markers.length > 0) {
-//         for (let i = 0; i < altitude_markers.length; i++) {
-//             var transform = altitude_markers[i].style.transform;
-//             if (transform.includes("scale(0") || transform.includes("scale(1")) {
-//                 var pattern = /scale(.)+./gm;
-//                 transform = transform.replace(pattern, `scale(${multiplyBy})`);
-//             } else if (transform.includes("scale")) {
-//                 transform = transform.replace("scale(1)", `scale(${multiplyBy})`);
-//             } else {
-//                 transform += ` scale(${multiplyBy})`;
-//             }
-//             altitude_markers[i].style.transform = transform;
-//         }
-//     }
-// }
-//
-// map.on('zoomend', function() {
-//     var currentZoom = map.getZoom();
-//     var multiplyBy = 1;
-//     // if (currentZoom > 16) {
-//     // multiplyBy = 1 + ((currentZoom - 13) * 0.2);
-//     // }
-//     if (currentZoom < 13 && currentZoom > 10) {
-//         multiplyBy = 1 - ((13 - currentZoom) * 0.2);
-//     } else if (currentZoom == 10 || currentZoom == 9) {
-//         multiplyBy = 0.4;
-//     } else if (currentZoom == 8) {
-//         multiplyBy = 0.2;
-//     } else {
-//         multiplyBy = 1;
-//     }
-//
-//     multiplyBy = parseFloat(multiplyBy).toFixed(2);
-//
-//     resizeLayers(multiplyBy);
-// });
-
 map.setView([32.00944444, 34.88555556], 13);
 
+var userAircraft = L.marker([], {
+	icon: new L.DivIcon({
+		iconSize: [100, 100],
+		iconAnchor: [50, 50],
+		className: "userAircraft-marker",
+		html: '<img src="map_pins/cessna.png" class="userAircraft">'
+	})
+});
+var intervalAircraftData;
+var url;
 
-// function Weather(code) {
-// 	this.code = code;
-// 	this.metar = "No Data";
-// 	this.taf = "No Data";
-// 	get: function(ICAO_code){
-// 		return {metar: this.metar, taf: this.taf};
-// 	};
-// 	private getData(){
-// 		var metarURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&hoursBeforeNow=3&mostRecent=true&stationString=" + code;
-// 		var tafURL = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow=3&timeType=issue&mostRecent=true&stationString=" + code;
-// 	};
-// };
+document.getElementById("user-aircraft").addEventListener("click", function() {
+	if(this.checked){
+		ip = document.getElementById("ipAddress").value;
+		if(ip){
+			url= `http://${ip}:2020/`;
+		} else {
+			url = "http://localhost:2020/";
+		}
+		getAirplaneFromSim;
+		intervalAircraftData = setInterval(getAirplaneFromSim, 5000);
+	} else {
+		clearInterval(intervalAircraftData);
+		userAircraft.remove();
+	}
+});
+
+function getAirplaneFromSim() {
+
+	var con = new XMLHttpRequest();
+
+	con.onreadystatechange = function() {
+		if (con.readyState == XMLHttpRequest.DONE) {
+			console.log(con.responseText);
+			var data = JSON.parse(con.responseText);
+			userAircraft.setLatLng([data.latitude, data.longitude]);
+			map.hasLayer(userAircraft) ? userAircraft : userAircraft.addTo(map);
+			document.getElementsByClassName("userAircraft")[0].style.transform = `rotate(${data.heading - 45}deg)`;
+		}
+	}
+
+	con.open('GET', url, true);
+	con.send();
+}

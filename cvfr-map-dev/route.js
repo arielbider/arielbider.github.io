@@ -133,13 +133,20 @@ var route_polyline_error = new routePolyline("rgb(220,20,60)");
 
 
 document.addEventListener("DOMContentLoaded", function() {
-	document.getElementById('route').addEventListener('keyup', translateRoute);
+	document.getElementById('route').addEventListener('input', translateRoute);
 	document.getElementById("direct-routes").addEventListener("click", changeDirectPermission);
 	document.getElementById("user-points").addEventListener("click", changeUserPointPermission);
 });
 
 function translateRoute() {
 	let route = document.getElementById("route").innerText;
+	route = route.replaceAll(/\r\n|\n|\r/gm, "");
+	route = route.replaceAll(" ", " ");
+	while (route.includes("  ")){
+		route = route.replaceAll("  ", " ");
+		console.log('time: ' + route);
+	}
+
 	let departure = document.getElementById("departure").value;
 	departure = departure.replaceAll(" ", "");
 	let arrival = document.getElementById("arrival").value;

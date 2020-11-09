@@ -1,4 +1,7 @@
 // *************** Utitily Functions ****************
+function log(text){
+	console.log(text);
+}
 
 function bearingFormat(bearing) {
 	if (bearing.toString().length == 1) {
@@ -209,63 +212,3 @@ for (let waypoint_key in cvfr_waypoints) {
 }
 
 map.setView([32.00944444, 34.88555556], 13);
-
-var userAircraft = L.marker([], {
-	icon: new L.DivIcon({
-		iconSize: [100, 100],
-		iconAnchor: [50, 50],
-		className: "userAircraft-marker",
-		html: '<img src="map_pins/cessna.png" class="userAircraft">'
-	})
-});
-var intervalAircraftData;
-var simURL;
-var mapControl;
-var focusOnAircraft = false;
-
-document.getElementById("user-aircraft").addEventListener("click", function() {
-	if (this.checked) {
-		// ip = document.getElementById("ipAddress").value;
-		// if(ip){
-		// 	simURL= `http://${ip}:2020/`;
-		// } else {
-		// 	simURL = "http://localhost:2020/";
-		// }
-		simURL = "http://localhost:2020/";
-		
-		mapControl = L.easyButton('fas fa-location-arrow', function() {
-			if (focusOnAircraft) {
-				focusOnAircraft = false;
-				document.getElementsByClassName("fa-location-arrow")[0].style.color = "black";
-			} else {
-				focusOnAircraft = true;
-				document.getElementsByClassName("fa-location-arrow")[0].style.color = "mediumspringgreen";
-			}
-		}).addTo(map);
-		getAirplaneFromSim();
-		intervalAircraftData = setInterval(getAirplaneFromSim, 2500);
-	} else {
-		clearInterval(intervalAircraftData);
-		userAircraft.remove();
-		mapControl.remove();
-	}
-});
-
-function getAirplaneFromSim() {
-	console.log("works");
-	var con = new XMLHttpRequest();
-	con.onreadystatechange = function() {
-		if (con.readyState == XMLHttpRequest.DONE) {
-			console.log(con.responseText);
-			var data = JSON.parse(con.responseText);
-			userAircraft.setLatLng([data.latitude, data.longitude]);
-			map.hasLayer(userAircraft) ? userAircraft : userAircraft.addTo(map);
-			document.getElementsByClassName("userAircraft")[0].style.transform = `rotate(${data.heading - 45}deg)`;
-			if (focusOnAircraft) {
-				map.setView([data.latitude, data.longitude], map.getZoom());
-			}
-		}
-	}
-	con.open('GET', url, true);
-	con.send();
-}

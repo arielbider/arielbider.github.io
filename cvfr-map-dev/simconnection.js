@@ -43,9 +43,13 @@ function getAirplaneFromSim() {
 	var con = new XMLHttpRequest();
 	con.onreadystatechange = function() {
 		if (con.readyState == XMLHttpRequest.DONE) {
-			console.log(con.responseText);
-			let data = JSON.parse(con.responseText);
-			setAircraftData(data);
+			try{
+				console.log(con.responseText);
+				let data = JSON.parse(con.responseText);
+				setAircraftData(data);
+			} catch(e){
+				console.log(e);
+			}
 		}
 	}
 	con.open('GET', simURL, true);

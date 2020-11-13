@@ -31,7 +31,7 @@ document.getElementById("user-aircraft").addEventListener("click", function() {
 			}
 		}).addTo(map);
 		getAirplaneFromSim();
-		intervalAircraftData = setInterval(getAirplaneFromSim, 2500);
+		intervalAircraftData = setInterval(getAirplaneFromSim, 1000);
 	} else {
 		clearInterval(intervalAircraftData);
 		userAircraft.remove();

@@ -425,14 +425,20 @@ input:checked+.slider:before {
 .http {
   font-size: 28px;
   font-weight: bold;
-  -webkit-touch-callout: pointer;
-  -webkit-user-select: pointer;
-  -khtml-user-select: pointer;
-  -moz-user-select: pointer;
-  -ms-user-select: pointer;
-  user-select: pointer;
+  color: burlywood !important;
 }
 
 .loadingGif{
   width: 15%;
+}
+
+.waypoint_name{
+  text-align: center;
+  direction: rtl;
+  color: white;
+  font-size: 20px;
+}
+
+.waypoint_icon{
+  width: 50%;
 }

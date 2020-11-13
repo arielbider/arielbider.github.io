@@ -5,33 +5,18 @@
 <head>
   <title>מפת CVFR אינטראקטיבית</title>
   <link rel="icon" href="img/favicon.png" sizes="32x32" type="image/png">
-
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
-
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-polylinedecorator/1.1.0/leaflet.polylineDecorator.min.js" integrity="sha512-2oK40N5b+8g4Fhp1rfdtmNaroXsh7tFN4OY6++9lB/Hb+uLQWmn0SSAXvnQfbn8BP8qtpri2YQLaFGpyzKUHow==" -->
-  <!-- crossorigin="anonymous"></script> -->
-
-  <!-- <script src="https://cdn.jsdelivr.net/npm/leaflet-textpath@1.2.3/leaflet.textpath.min.js"></script> -->
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-sidebar-v2@3.2.3/css/leaflet-sidebar.min.css">
   <script src="https://cdn.jsdelivr.net/npm/leaflet-sidebar-v2@3.2.3/js/leaflet-sidebar.min.js"></script>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.min.js" integrity="sha512-Tndo4y/YJooD/mGXS9D6F1YyBcSyrWnnSWQ5Z9IcKt6bljicjyka9qcP99qMFbQ5+omfOtwwIapv1DjBCZcTJQ==" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.css" integrity="sha512-aiVWmB2G8oV+XfHo1CR6hEAxzCl48Lrl3UBzQ6P+BEMkT8qY1tGecdQx6x/X8i9cCVrwQU9ipsOsZlNkRh9n7w==" crossorigin="anonymous" />
-
-  <!-- <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script> -->
-  <!-- <script src="https://chr15m.github.io/bugout/bugout.min.js"></script> -->
-
+  <script src="https://unpkg.com/leaflet-kmz@latest/dist/leaflet-kmz.js"></script>
   <script src="data/cvfr_waypoints.js"></script>
   <script src="data/cvfr_airways.js"></script>
   <script src="data/charts.js"></script>
-
   <link rel="stylesheet" href="css/stylesheet.css">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 </head>
@@ -94,7 +79,8 @@
 
       <div class="leaflet-sidebar-pane" id="flight-plan">
         <h1 class="leaflet-sidebar-header">
-          תוכנית טיסה<span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+          תוכנית טיסה
+          <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
         </h1>
 
         <div class="airport-text">
@@ -140,9 +126,9 @@
           <br>
           <p>ניתן ליצור חיבור לסימולטור ולראות את המטוס על המפה. לאחר מכן, ניתן למרכז את התצוגה למטוס על ידי לחיצה על סמן החץ מצד שמאל (מתחת לזום).</p>
           <div>
-          לחיבור מחשב אחר עם הסימולטור, הכנס את המזהה המיוחד שלו:
+            לחיבור מחשב אחר באותה רשת אינטרנט, הכנס את ה-IP שלו:
           </div>
-          <input type="text" placeholder="מזהה מיוחד למחשב" class="ipAddress" id="ipAddress">
+          <input type="text" placeholder="XXX.XXX.XXX.XXXX" class="ipAddress" id="ipAddress">
           <div>על מנת שתוכל/י להתחבר ממכשיר אחר, אנא לחץ כאן:</div>
           <a href="http://cvfrmap.ga/cvfr-map-dev" class="http">מעבר ל-HTTP</a>
         </div>

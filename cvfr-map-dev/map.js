@@ -1,5 +1,5 @@
 // *************** Utitily Functions ****************
-function log(text){
+function log(text) {
 	console.log(text);
 }
 
@@ -121,8 +121,7 @@ function deg2rad(deg) {
 // *************** Main code starts here **************************
 
 var map = L.map('mapid', {
-	minZoom: 8,
-	maxZoom: 14
+
 });
 
 var sidebar = L.control
@@ -153,8 +152,27 @@ map.on('popupopen', function(source) {
 	}
 });
 
-var cvfr_map = L.tileLayer('map/{z}/{x}/{y}.png', {
-	attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',
+var cvfr_map_layer = L.tileLayer('map/{z}/{x}/{y}.png', {
+		attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',
+		minZoom: 8,
+		maxZoom: 14
+	}).addTo(map),
+	satellite_imagery_layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+		attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+		minZoom: 8,
+		maxZoom: 17
+	}),
+	cvfr_points_names_layer = L.layerGroup(),
+	cvfr_airways_layer = L.layerGroup(),
+	kmz = L.kmzLayer();
+
+kmz.load("data/Basic_Map.kmz");
+
+var satellite_and_points_names = L.layerGroup([satellite_imagery_layer, cvfr_points_names_layer, cvfr_airways_layer, kmz]);
+
+L.control.layers({
+	"מפת CVFR": cvfr_map_layer,
+	'תצ"א': satellite_and_points_names
 }).addTo(map);
 
 var waypoints_layer = new L.FeatureGroup().addTo(map);
@@ -169,6 +187,28 @@ map.on("zoomend", function() {
 
 for (let waypoint_key in cvfr_waypoints) {
 	let waypoint = cvfr_waypoints[waypoint_key];
+
+	let iconPic;
+	if (waypoint["atc_switch"]) {
+		iconPic = "map_pins/by_request.png";
+	} else if (waypoint["type"] == "ARP") {
+		iconPic = "map_pins/airport.png";
+	} else if (waypoint["type"] == "דרישה") {
+		iconPic = "map_pins/must_switch.png";
+	} else {
+		iconPic = "map_pins/must.png";
+	}
+
+	var name_marker_html = `<img src="${iconPic}" class="waypoint_icon"><br>${waypoint["name"]} - ${waypoint["CODE"]}`;
+
+	L.marker([waypoint["LAT"], waypoint["LONG"]], {
+		icon: new L.DivIcon({
+			iconSize: [150, 150],
+			iconAnchor: [75, 40],
+			className: "waypoint_name",
+			html: name_marker_html
+		})
+	}).addTo(cvfr_points_names_layer);
 
 	if (waypoint["type"] == "ARP") {
 		curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
@@ -210,5 +250,44 @@ for (let waypoint_key in cvfr_waypoints) {
                   </div>`);
 	}
 }
+
+airways.forEach((airway, i) => {
+	console.log(airway);
+	console.log(airway["start_point"]);
+	console.log(airway["end_point"]);
+	let start_point = Object.values(cvfr_waypoints).find(waypoint => waypoint.name == airway.start_point),
+		end_point = Object.values(cvfr_waypoints).find(waypoint => waypoint.name == airway.end_point),
+		airway_latlngs = [];
+
+	if (airway.hasOwnProperty("points")) {
+		airway_latlngs.push([start_point.LAT, start_point.LONG]);
+		airway.points.forEach((point, i) => {
+			airway_latlngs.push([point.lat, point.long]);
+		});
+		airway_latlngs.push([end_point.LAT, end_point.LONG]);
+	} else {
+		airway_latlngs = [
+		    [start_point.LAT, start_point.LONG],
+		    [end_point.LAT, end_point.LONG]
+		];
+	}
+
+	let settings = {
+		color: 'rgb(0,165,80)',
+		weight: 10,
+		lineCap: 'butt'
+	};
+
+	if (airway.army_airway) {
+		settings.color = "rgb(0,113,187)";
+	}
+	if (airway.on_atc_approval) {
+		settings.dashArray = '50, 50';
+		settings.dashOffset = '0';
+	}
+
+	L.polyline(airway_latlngs, settings).addTo(cvfr_airways_layer);
+});
+
 
 map.setView([32.00944444, 34.88555556], 13);

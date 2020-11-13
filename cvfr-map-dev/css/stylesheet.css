@@ -422,16 +422,15 @@ input:checked+.slider:before {
   padding: 5px;
 }
 
-#thisId {
+.http {
   font-size: 28px;
   font-weight: bold;
-  -webkit-touch-callout: text;
-  -webkit-user-select: text;
-  -khtml-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
-  word-wrap: break-word;
+  -webkit-touch-callout: pointer;
+  -webkit-user-select: pointer;
+  -khtml-user-select: pointer;
+  -moz-user-select: pointer;
+  -ms-user-select: pointer;
+  user-select: pointer;
 }
 
 .loadingGif{

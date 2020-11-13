@@ -1,6 +1,3 @@
-var b = new Bugout();
-document.getElementById("thisId").innerHTML = b.address();
-
 var userAircraft = L.marker([], {
 	icon: new L.DivIcon({
 		iconSize: [100, 100],
@@ -13,51 +10,32 @@ var intervalAircraftData;
 var simURL;
 var mapControl;
 var focusOnAircraft = false;
-var simURL = "http://localhost:2020/";
+var simURL;
 
 document.getElementById("user-aircraft").addEventListener("click", function() {
 	ipAddress = document.getElementById("ipAddress").value;
-	if (!ipAddress) {
-		if (this.checked) {
-			mapControl = L.easyButton('fas fa-location-arrow', function() {
-				if (focusOnAircraft) {
-					focusOnAircraft = false;
-					document.getElementsByClassName("fa-location-arrow")[0].style.color = "black";
-				} else {
-					focusOnAircraft = true;
-					document.getElementsByClassName("fa-location-arrow")[0].style.color = "mediumspringgreen";
-				}
-			}).addTo(map);
-			getAirplaneFromSim();
-			intervalAircraftData = setInterval(getAirplaneFromSim, 2500);
+	if (this.checked) {
+		console.log(!ipAddress);
+		if (ipAddress) {
+			simURL = "http://" + ipAddress + ":2020";
 		} else {
-			clearInterval(intervalAircraftData);
-			userAircraft.remove();
-			mapControl.remove();
+			simURL = "http://localhost:2020"
 		}
+		mapControl = L.easyButton('fas fa-location-arrow', function() {
+			if (focusOnAircraft) {
+				focusOnAircraft = false;
+				document.getElementsByClassName("fa-location-arrow")[0].style.color = "black";
+			} else {
+				focusOnAircraft = true;
+				document.getElementsByClassName("fa-location-arrow")[0].style.color = "mediumspringgreen";
+			}
+		}).addTo(map);
+		getAirplaneFromSim();
+		intervalAircraftData = setInterval(getAirplaneFromSim, 2500);
 	} else {
-		b = new Bugout(ipAddress);
-		document.getElementById("thisId").innerHTML = b.address();
-		if (this.checked) {
-			mapControl = L.easyButton('fas fa-location-arrow', function() {
-				if (focusOnAircraft) {
-					focusOnAircraft = false;
-					document.getElementsByClassName("fa-location-arrow")[0].style.color = "black";
-				} else {
-					focusOnAircraft = true;
-					document.getElementsByClassName("fa-location-arrow")[0].style.color = "mediumspringgreen";
-				}
-			}).addTo(map);
-
-			getAirplaneFromSim();
-			intervalAircraftData = setInterval(getAirplaneFromSim, 2500);
-		} else {
-			clearInterval(intervalAircraftData);
-			userAircraft.remove();
-			mapControl.remove();
-			b.on("message", function() {});
-			document.getElementById("thisId").innerHTML = "";
-		}
+		clearInterval(intervalAircraftData);
+		userAircraft.remove();
+		mapControl.remove();
 	}
 });
 
@@ -67,19 +45,11 @@ function getAirplaneFromSim() {
 		if (con.readyState == XMLHttpRequest.DONE) {
 			console.log(con.responseText);
 			let data = JSON.parse(con.responseText);
-			if (document.getElementById("ipAddress").value) {
-				sendToRemote(data);
-			}
 			setAircraftData(data);
 		}
 	}
 	con.open('GET', simURL, true);
 	con.send();
-}
-
-function sendToRemote(data) {
-	b.send(JSON.stringify(data));
-	console.log("hi");
 }
 
 function setAircraftData(data) {
@@ -90,9 +60,3 @@ function setAircraftData(data) {
 		map.setView([data.latitude, data.longitude], map.getZoom());
 	}
 }
-
-b.on("message", function(address, message) {
-	log(`${address}: ${message}`);
-	let data = JSON.parse(message);
-	setAircraftData(data);
-});

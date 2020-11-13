@@ -166,7 +166,7 @@ var cvfr_map_layer = L.tileLayer('map/{z}/{x}/{y}.png', {
 	cvfr_airways_layer = L.layerGroup(),
 	kmz = L.kmzLayer();
 
-kmz.load("data/Basic_Map.kmz");
+kmz.load("https://github.com/arielbider/arielbider.github.io/raw/master/cvfr-map-dev/data/Basic_Map.kmz");
 
 var satellite_and_points_names = L.layerGroup([satellite_imagery_layer, cvfr_points_names_layer, cvfr_airways_layer, kmz]);
 

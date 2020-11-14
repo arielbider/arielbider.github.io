@@ -467,7 +467,7 @@ input:checked+.slider:before {
     left: 0;
 }
 
-@media only screen and (max-width: 672px) {
+@media only screen and (max-width: 952px) {
   .gauge {
     height: 175px;
   }

@@ -12,7 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/leaflet-sidebar-v2@3.2.3/js/leaflet-sidebar.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.min.js" integrity="sha512-Tndo4y/YJooD/mGXS9D6F1YyBcSyrWnnSWQ5Z9IcKt6bljicjyka9qcP99qMFbQ5+omfOtwwIapv1DjBCZcTJQ==" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.css" integrity="sha512-aiVWmB2G8oV+XfHo1CR6hEAxzCl48Lrl3UBzQ6P+BEMkT8qY1tGecdQx6x/X8i9cCVrwQU9ipsOsZlNkRh9n7w==" crossorigin="anonymous" />
-  <script src="https://unpkg.com/leaflet-kmz@latest/dist/leaflet-kmz.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-gauges@2.1.7/gauge.min.js"></script>
 
   <script src="data/cvfr_waypoints.js"></script>
   <script src="data/cvfr_airways.js"></script>
@@ -31,6 +31,16 @@
 </head>
 
 <body>
+
+  <div class="gauges-div">
+    <canvas id="bearing"></canvas>
+    <div class="wrapper">
+      <canvas id="big_altitude"></canvas>
+      <canvas id="small_altitude"></canvas>
+    </div>
+    <canvas id="speedometer"></canvas>
+  </div>
+
   <div id="sidebar" class="leaflet-sidebar collapsed">
     <!-- Nav tabs -->
     <div class="leaflet-sidebar-tabs">
@@ -140,6 +150,8 @@
           <input type="text" placeholder="XXX.XXX.XXX.XXXX" class="ipAddress" id="ipAddress">
           <div>על מנת שתוכל/י להתחבר ממכשיר אחר, אנא לחץ כאן:</div>
           <a href="http://cvfrmap.ga/cvfr-map-dev" class="http">מעבר ל-HTTP</a>
+          <br>
+          <a href="server/fsuipc.zip" class="server-download">להורדת הסרבר לחצו כאן</a>
         </div>
       </div>
 
@@ -180,10 +192,12 @@
 
     <div id="mapid" draggable="false"></div>
 
+    <script src="utils.js"></script>
     <script src="map.js"></script>
     <script src="route.js"></script>
     <script src="toolbar.js"></script>
     <script src="simconnection.js"></script>
+    <script src="gauges.js"></script>
   </div>
 </body>
 

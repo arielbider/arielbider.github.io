@@ -131,6 +131,10 @@ class routePolyline {
 var route_polyline = new routePolyline("rgb(255,0,255)");
 var route_polyline_error = new routePolyline("rgb(220,20,60)");
 
+map.on('baselayerchange', function() {
+	route_polyline._polyline.bringToFront();
+	route_polyline_error._polyline.bringToFront();
+});
 
 document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById('route').addEventListener('input', translateRoute);

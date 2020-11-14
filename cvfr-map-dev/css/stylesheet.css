@@ -442,3 +442,27 @@ input:checked+.slider:before {
 .waypoint_icon{
   width: 50%;
 }
+
+.server-download{
+  color: deepskyblue !important;
+  margin-top: 10px;
+  display: block;
+}
+
+.gauges-div{
+  background-color: white;
+  padding: 5px;
+  display: flex;
+}
+
+.wrapper {
+    position: relative;
+    width: 200px;
+    height: 100%;
+}
+
+.wrapper canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

@@ -36,6 +36,10 @@ document.getElementById("user-aircraft").addEventListener("click", function() {
 		clearInterval(intervalAircraftData);
 		userAircraft.remove();
 		mapControl.remove();
+		small_altitude.value = 0;
+		speed_gauge.value = 0;
+		big_altitude.value = 0;
+		bearing_gauge.value = 0;
 	}
 });
 
@@ -63,4 +67,8 @@ function setAircraftData(data) {
 	if (focusOnAircraft) {
 		map.setView([data.latitude, data.longitude], map.getZoom());
 	}
+	small_altitude.value = data.altitude/10;
+	speed_gauge.value = data.ias;
+	big_altitude.value = data.altitude;
+	bearing_gauge.value = data.heading;
 }

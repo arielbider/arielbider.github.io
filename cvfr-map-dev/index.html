@@ -33,12 +33,18 @@
 <body>
 
   <div class="gauges-div">
-    <canvas id="bearing"></canvas>
-    <div class="wrapper">
-      <canvas id="big_altitude"></canvas>
-      <canvas id="small_altitude"></canvas>
+    <div class="gauge">
+      <canvas id="speedometer"></canvas>
     </div>
-    <canvas id="speedometer"></canvas>
+    <div class="gauge">
+      <div class="wrapper">
+        <canvas id="big_altitude"></canvas>
+        <canvas id="small_altitude"></canvas>
+      </div>
+    </div>
+    <div class="gauge">
+      <canvas id="bearing"></canvas>
+    </div>
   </div>
 
   <div id="sidebar" class="leaflet-sidebar collapsed">

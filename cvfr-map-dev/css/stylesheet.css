@@ -506,4 +506,5 @@ input:checked+.slider:before {
   display: block;
   margin-right: 35px;
   cursor: pointer;
+  width: 60px
 }

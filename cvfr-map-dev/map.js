@@ -152,6 +152,10 @@ map.on('popupopen', function(source) {
 	}
 });
 
+map.on('baselayerchange', function() {
+	route_polyline._polyline.bringToFront();
+});
+
 var cvfr_map_layer = L.tileLayer('map/{z}/{x}/{y}.png', {
 		attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',
 		minZoom: 8,
@@ -164,9 +168,30 @@ var cvfr_map_layer = L.tileLayer('map/{z}/{x}/{y}.png', {
 	}),
 	cvfr_points_names_layer = L.layerGroup(),
 	cvfr_airways_layer = L.layerGroup(),
-	kmz = L.kmzLayer();
+	kmz = L.layerGroup(),
+	waypoints_layer = new L.FeatureGroup().addTo(map);
 
-kmz.load("https://github.com/arielbider/arielbider.github.io/raw/master/cvfr-map-dev/data/Basic_Map.kmz");
+function onEachFeature(feature, layer) {
+	// does this feature have a property named popupContent?
+	if (feature.properties && feature.properties.description) {
+		layer.bindPopup(feature.properties.description);
+	}
+}
+
+let kmz_vars = [fir, ga_airspace, limited_areas, parachuting, ratag, uas];
+
+kmz_vars.forEach((layer, i) => {
+	L.geoJSON(layer, {
+		onEachFeature: onEachFeature,
+		style: function(feature) {
+			console.log(feature);
+			return {
+				color: feature.style.fill
+			};
+		}
+	}).addTo(kmz);
+});
+
 
 var satellite_and_points_names = L.layerGroup([satellite_imagery_layer, cvfr_points_names_layer, cvfr_airways_layer, kmz]);
 
@@ -174,8 +199,6 @@ L.control.layers({
 	"מפת CVFR": cvfr_map_layer,
 	'תצ"א': satellite_and_points_names
 }).addTo(map);
-
-var waypoints_layer = new L.FeatureGroup().addTo(map);
 
 map.on("zoomend", function() {
 	if (map.getZoom() < 11 && map.hasLayer(waypoints_layer)) {
@@ -190,18 +213,18 @@ for (let waypoint_key in cvfr_waypoints) {
 
 	let iconPic;
 	if (waypoint["atc_switch"]) {
-		iconPic = "map_pins/by_request.png";
+		iconPic = "map_pins/must_switch.png";
 	} else if (waypoint["type"] == "ARP") {
 		iconPic = "map_pins/airport.png";
-	} else if (waypoint["type"] == "דרישה") {
-		iconPic = "map_pins/must_switch.png";
-	} else {
+	} else if (waypoint["type"] == "חובה") {
 		iconPic = "map_pins/must.png";
+	} else {
+		iconPic = "map_pins/by_request.png";
 	}
 
-	var name_marker_html = `<img src="${iconPic}" class="waypoint_icon"><br>${waypoint["name"]} - ${waypoint["CODE"]}`;
+	let name_marker_html = `<img src="${iconPic}" class="waypoint_icon"><br>${waypoint["name"]} - ${waypoint["CODE"]}`;
 
-	L.marker([waypoint["LAT"], waypoint["LONG"]], {
+	let satellite_layer_waypoint_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
 		icon: new L.DivIcon({
 			iconSize: [150, 150],
 			iconAnchor: [75, 40],
@@ -211,14 +234,14 @@ for (let waypoint_key in cvfr_waypoints) {
 	}).addTo(cvfr_points_names_layer);
 
 	if (waypoint["type"] == "ARP") {
-		curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
+		let curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
 			icon: new L.DivIcon({
 				iconSize: [240, 240],
 				iconAnchor: [120, 120],
 				className: 'waypoint-marker',
 			})
 		}).addTo(waypoints_layer);
-		curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
+		let markerHtml = `<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
                     <div>
                       <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 1)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
                       <span class="button-text">הוסף לנתיב</span>
@@ -231,23 +254,27 @@ for (let waypoint_key in cvfr_waypoints) {
                       <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
                       <span class="button-text">קבע כשדה נחיתה</span>
                     </div>
-                  </div>`, {
+                  </div>`;
+		curr_marker.bindPopup(markerHtml, {
 			minWidth: 170
 		});
+		satellite_layer_waypoint_marker.bindPopup(markerHtml);
 	} else {
-		curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
+		let curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
 			icon: new L.DivIcon({
 				iconSize: [120, 120],
 				iconAnchor: [60, 60],
 				className: 'waypoint-marker',
 			})
 		}).addTo(waypoints_layer);
-		curr_marker.bindPopup(`<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
+		let markerHtml = `<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
                     <div>
                       <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
                       <span class="button-text">הוסף לנתיב</span>
                     </div>
-                  </div>`);
+                  </div>`
+		curr_marker.bindPopup(markerHtml);
+		satellite_layer_waypoint_marker.bindPopup(markerHtml);
 	}
 }
 
@@ -289,5 +316,6 @@ airways.forEach((airway, i) => {
 	L.polyline(airway_latlngs, settings).addTo(cvfr_airways_layer);
 });
 
+waypoints_layer.bringToFront();
 
 map.setView([32.00944444, 34.88555556], 13);

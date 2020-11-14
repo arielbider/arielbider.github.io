@@ -68,7 +68,7 @@ cvfr_waypoints =
         "CODE": "AYLON",
         "LONG": 34.94361111,
         "LAT": 31.87166667,
-        "atc_switch": false
+        "atc_switch": true
     },
     "אילת": {
         "name": "אילת",
@@ -148,7 +148,7 @@ cvfr_waypoints =
         "CODE": "AFFEK",
         "LONG": 35.12777778,
         "LAT": 32.84027778,
-        "atc_switch": false
+        "atc_switch": true
     },
     "ארגמן": {
         "name": "ארגמן",
@@ -298,7 +298,7 @@ cvfr_waypoints =
         "CODE": "DEROR",
         "LONG": 34.89111111,
         "LAT": 32.25722222,
-        "atc_switch": false
+        "atc_switch": true
     },
     "בצרה": {
         "name": "בצרה",
@@ -368,7 +368,7 @@ cvfr_waypoints =
         "CODE": "GILAM",
         "LONG": 35.1325,
         "LAT": 32.82138889,
-        "atc_switch": false
+        "atc_switch": true
     },
     "גני עם": {
         "name": "גני עם",
@@ -378,7 +378,7 @@ cvfr_waypoints =
         "CODE": "GNYAM",
         "LONG": 34.89416667,
         "LAT": 32.15027778,
-        "atc_switch": false
+        "atc_switch": true
     },
     "דוגית": {
         "name": "דוגית",
@@ -408,7 +408,7 @@ cvfr_waypoints =
         "CODE": "DEENA",
         "LONG": 34.64055556,
         "LAT": 32.02388889,
-        "atc_switch": false
+        "atc_switch": true
     },
     "דליה": {
         "name": "דליה",
@@ -418,7 +418,7 @@ cvfr_waypoints =
         "CODE": "DALIA",
         "LONG": 35.08333333,
         "LAT": 32.59694444,
-        "atc_switch": false
+        "atc_switch": true
     },
     "הודיה": {
         "name": "הודיה",
@@ -458,7 +458,7 @@ cvfr_waypoints =
         "CODE": "MOVIL",
         "LONG": 35.23333333,
         "LAT": 32.75916667,
-        "atc_switch": false
+        "atc_switch": true
     },
     "הצוק": {
         "name": "הצוק",
@@ -538,7 +538,7 @@ cvfr_waypoints =
         "CODE": "HULAT",
         "LONG": 35.62944444,
         "LAT": 33.04361111,
-        "atc_switch": false
+        "atc_switch": true
     },
     "חורבות עבדת": {
         "name": "חורבות עבדת",
@@ -758,7 +758,7 @@ cvfr_waypoints =
         "CODE": "HASID",
         "LONG": 35.07777778,
         "LAT": 32.74666667,
-        "atc_switch": false
+        "atc_switch": true
     },
     "כפר חרוב": {
         "name": "כפר חרוב",
@@ -768,7 +768,7 @@ cvfr_waypoints =
         "CODE": "HAROV",
         "LONG": 35.66833333,
         "LAT": 32.75916667,
-        "atc_switch": false
+        "atc_switch": true
     },
     "כפר מנחם": {
         "name": "כפר מנחם",
@@ -798,7 +798,7 @@ cvfr_waypoints =
         "CODE": "DESHE",
         "LONG": 35.5325,
         "LAT": 32.87,
-        "atc_switch": false
+        "atc_switch": true
     },
     "להב": {
         "name": "להב",
@@ -818,7 +818,7 @@ cvfr_waypoints =
         "CODE": "BASAN",
         "LONG": 35.63805556,
         "LAT": 33.14611111,
-        "atc_switch": false
+        "atc_switch": true
     },
     "לטרון": {
         "name": "לטרון",
@@ -878,7 +878,7 @@ cvfr_waypoints =
         "CODE": "DAROM",
         "LONG": 34.94333333,
         "LAT": 32.79611111,
-        "atc_switch": false
+        "atc_switch": true
     },
     "מחלף הראל": {
         "name": "מחלף הראל",
@@ -898,7 +898,7 @@ cvfr_waypoints =
         "CODE": "NSHRM",
         "LONG": 34.89166667,
         "LAT": 31.90916667,
-        "atc_switch": false
+        "atc_switch": true
     },
     "מחלף ראשון": {
         "name": "מחלף ראשון",
@@ -1018,7 +1018,7 @@ cvfr_waypoints =
         "CODE": "NTAIM",
         "LONG": 34.78083333,
         "LAT": 31.94361111,
-        "atc_switch": false
+        "atc_switch": true
     },
     "ניצן": {
         "name": "ניצן",
@@ -1038,7 +1038,7 @@ cvfr_waypoints =
         "CODE": "BANIM",
         "LONG": 34.76472222,
         "LAT": 31.67805556,
-        "atc_switch": false
+        "atc_switch": true
     },
     "נמל אשדוד": {
         "name": "נמל אשדוד",
@@ -1048,7 +1048,7 @@ cvfr_waypoints =
         "CODE": "NMASD",
         "LONG": 34.62527778,
         "LAT": 31.83333333,
-        "atc_switch": false
+        "atc_switch": true
     },
     "נעם": {
         "name": "נעם",
@@ -1058,7 +1058,7 @@ cvfr_waypoints =
         "CODE": "NOAAM",
         "LONG": 34.77583333,
         "LAT": 31.57138889,
-        "atc_switch": false
+        "atc_switch": true
     },
     "נעמה": {
         "name": "נעמה",
@@ -1188,7 +1188,7 @@ cvfr_waypoints =
         "CODE": "ZUKIM",
         "LONG": 35.44972222,
         "LAT": 31.71611111,
-        "atc_switch": false
+        "atc_switch": true
     },
     "עירון": {
         "name": "עירון",
@@ -1208,7 +1208,7 @@ cvfr_waypoints =
         "CODE": "AAKKO",
         "LONG": 35.09638889,
         "LAT": 32.91861111,
-        "atc_switch": false
+        "atc_switch": true
     },
     "עמיעוז": {
         "name": "עמיעוז",
@@ -1258,7 +1258,7 @@ cvfr_waypoints =
         "CODE": "PARDS",
         "LONG": 34.84777778,
         "LAT": 32.10277778,
-        "atc_switch": false
+        "atc_switch": true
     },
     "צדפה": {
         "name": "צדפה",
@@ -1268,7 +1268,7 @@ cvfr_waypoints =
         "CODE": "ZDAFA",
         "LONG": 34.59972222,
         "LAT": 31.78166667,
-        "atc_switch": false
+        "atc_switch": true
     },
     "צומת אשדוד": {
         "name": "צומת אשדוד",
@@ -1278,7 +1278,7 @@ cvfr_waypoints =
         "CODE": "ZASHD",
         "LONG": 34.70833333,
         "LAT": 31.82611111,
-        "atc_switch": false
+        "atc_switch": true
     },
     "צומת הנגב": {
         "name": "צומת הנגב",
@@ -1358,7 +1358,7 @@ cvfr_waypoints =
         "CODE": "ZMGID",
         "LONG": 35.19111111,
         "LAT": 32.57277778,
-        "atc_switch": false
+        "atc_switch": true
     },
     "צומת מגן": {
         "name": "צומת מגן",
@@ -1398,7 +1398,7 @@ cvfr_waypoints =
         "CODE": "AFULA",
         "LONG": 35.28194444,
         "LAT": 32.60361111,
-        "atc_switch": false
+        "atc_switch": true
     },
     "צומת ערד": {
         "name": "צומת ערד",
@@ -1508,7 +1508,7 @@ cvfr_waypoints =
         "CODE": "KNTRY",
         "LONG": 34.80138889,
         "LAT": 32.14083333,
-        "atc_switch": false
+        "atc_switch": true
     },
     "קיריון": {
         "name": "קיריון",
@@ -1688,7 +1688,7 @@ cvfr_waypoints =
         "CODE": "SORES",
         "LONG": 35.07611111,
         "LAT": 31.79972222,
-        "atc_switch": false
+        "atc_switch": true
     },
     "שזפון": {
         "name": "שזפון",
@@ -1748,7 +1748,7 @@ cvfr_waypoints =
         "CODE": "SFAIM",
         "LONG": 34.80722222,
         "LAT": 32.21055556,
-        "atc_switch": false
+        "atc_switch": true
     },
     "תימן": {
         "name": "תימן",
@@ -1778,7 +1778,7 @@ cvfr_waypoints =
         "CODE": "TYONA",
         "LONG": 34.72722222,
         "LAT": 32.00472222,
-        "atc_switch": false
+        "atc_switch": true
     },
     "תל נוף": {
         "name": "תל נוף",

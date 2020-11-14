@@ -13,6 +13,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.min.js" integrity="sha512-Tndo4y/YJooD/mGXS9D6F1YyBcSyrWnnSWQ5Z9IcKt6bljicjyka9qcP99qMFbQ5+omfOtwwIapv1DjBCZcTJQ==" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.css" integrity="sha512-aiVWmB2G8oV+XfHo1CR6hEAxzCl48Lrl3UBzQ6P+BEMkT8qY1tGecdQx6x/X8i9cCVrwQU9ipsOsZlNkRh9n7w==" crossorigin="anonymous" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-gauges@2.1.7/gauge.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 
   <script src="data/cvfr_waypoints.js"></script>
   <script src="data/cvfr_airways.js"></script>
@@ -52,7 +53,7 @@
     <div class="leaflet-sidebar-tabs">
       <ul role="tablist">
         <li>
-          <a href="#help" role="tab" title="עזרה"><i class="fa fa-question-circle"></i></a>
+          <a href="#help" role="tab" title="עזרה" id="help-sidebar-button"><i class="fa fa-question-circle"></i></a>
         </li>
         <li>
           <a href="#charts" role="tab" title="דפיות"><i class="fa fa-file-alt"></i></a>
@@ -62,6 +63,9 @@
         </li>
         <li>
           <a href="#connect" role="tab" title="חיבור לסימולטור"><i class="fa fa-plane"></i></a>
+        </li>
+        <li>
+          <a href="#scrathpad" role="tab" title="לוח רישום" id="scrathpad-button"><i class="far fa-clipboard"></i></a>
         </li>
         <li>
           <a href="#settings" role="tab" title="הגדרות"><i class="fa fa-cog"></i></a>
@@ -195,16 +199,23 @@
   </div>
 
   <div class="map-container">
-
     <div id="mapid" draggable="false"></div>
-
-    <script src="utils.js"></script>
-    <script src="map.js"></script>
-    <script src="route.js"></script>
-    <script src="toolbar.js"></script>
-    <script src="simconnection.js"></script>
-    <script src="gauges.js"></script>
+    <div id="scrathpad-wrapper">
+      <i class="far fa-times-circle" title="חזור למפה"></i>
+      <i class="fas fa-eraser" id="erase-button" title="מחק"></i>
+      <i class="fas fa-backspace" id="clear-board-button" title="מחק הכל"></i>
+      <canvas id="scrathpad"></canvas>
+    </div>
   </div>
+
 </body>
+
+<script src="js\utils.js"></script>
+<script src="js\map.js"></script>
+<script src="js\route.js"></script>
+<script src="js\toolbar.js"></script>
+<script src="js\simconnection.js"></script>
+<script src="js\gauges.js"></script>
+<script src="js\scrathpad.js"></script>
 
 </html>

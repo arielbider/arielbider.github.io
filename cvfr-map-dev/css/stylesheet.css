@@ -237,7 +237,7 @@ body,
   background-color: rgb(66, 66, 66, .95);
 }
 
-.leaflet-sidebar-tabs .fa {
+.leaflet-sidebar-tabs .fa, .leaflet-sidebar-tabs .far {
   color: white;
 }
 
@@ -428,50 +428,82 @@ input:checked+.slider:before {
   color: burlywood !important;
 }
 
-.loadingGif{
+.loadingGif {
   width: 15%;
 }
 
-.waypoint_name{
+.waypoint_name {
   text-align: center;
   direction: rtl;
   color: white;
   font-size: 20px;
 }
 
-.waypoint_icon{
+.waypoint_icon {
   width: 50%;
 }
 
-.server-download{
+.server-download {
   color: deepskyblue !important;
   margin-top: 10px;
   display: block;
 }
 
-.gauges-div{
+.gauges-div {
   background-color: white;
   padding: 5px;
   display: flex;
 }
 
 .wrapper {
-    position: relative;
-    width: 200px;
-    height: 100%;
+  position: relative;
+  width: 200px;
+  height: 100%;
 }
 
 .wrapper canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 @media only screen and (max-width: 952px) {
   .gauge {
     height: 175px;
   }
-  .gauges-div{
+
+  .gauges-div {
     display: block;
   }
+}
+
+#scrathpad {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#scrathpad-wrapper {
+  direction: rtl;
+  z-index: 1;
+}
+
+.fa-times-circle {
+  font-size: 100px;
+  z-index: 2;
+  position: relative;
+  margin-bottom: 20px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.fa-eraser, .fa-backspace {
+  font-size: 45px;
+  z-index: 2;
+  position: relative;
+  display: block;
+  margin-right: 35px;
+  cursor: pointer;
 }

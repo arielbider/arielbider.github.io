@@ -9,7 +9,7 @@ function resizeCanvas() {
 	canvas.width = canvas.offsetWidth * ratio;
 	canvas.height = canvas.offsetHeight * ratio;
 	canvas.getContext("2d").scale(ratio, ratio);
-	signaturePad.clear(); // otherwise isEmpty() might return incorrect value
+	// signaturePad.clear(); //otherwise isEmpty() might return incorrect value
 }
 
 window.addEventListener("resize", resizeCanvas);

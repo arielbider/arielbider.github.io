@@ -452,7 +452,7 @@ input:checked+.slider:before {
 .gauges-div {
   background-color: white;
   padding: 5px;
-  display: flex;
+  display: none;
 }
 
 .wrapper {

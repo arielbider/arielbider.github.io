@@ -1,3 +1,21 @@
+document.addEventListener("DOMContentLoaded", function() {
+	document.getElementById("gauges-window").addEventListener("click", openCloseGaugesWindow);
+});
+
+function openCloseGaugesWindow(button){
+
+	window_isOpen = button.srcElement.checked;
+
+	if (window_isOpen) {
+		 document.getElementsByClassName("gauges-div")[0].style.display = "flex";
+	} else {
+		 document.getElementsByClassName("gauges-div")[0].style.display = "none";
+	}
+
+}
+
+
+
 L.Control.Gauges = L.Control.extend({
 	onAdd: function(map) {
 		var div = L.DomUtil.create('div');

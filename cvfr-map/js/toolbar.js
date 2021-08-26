@@ -49,7 +49,7 @@ function changeAddRemove(node) {
 	if (node.classList.contains("fa-plus-square")) {
 		node.classList.replace("fa-plus-square", "fa-minus-square");
 		chartUrl = node.parentNode.getElementsByTagName("a")[0].dataset.url;
-		fullURL = '../cvfr-map-dev/charts/' + chartUrl;
+		fullURL = 'charts/' + chartUrl;
 		fullURL += '/{z}/{x}/{y}.png';
 		layerToMap = L.tileLayer(fullURL, {
 			attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',

@@ -2,6 +2,7 @@
 
 html {
 	height: 100%;
+	direction: rtl;
 }
 
 body {
@@ -10,7 +11,6 @@ body {
 	background: linear-gradient(90deg, #49a09d, #5f2c82);
 	font-family: 'Rubik', sans-serif;
 	font-weight: 100;
-	direction: rtl;
 }
 
 .container {

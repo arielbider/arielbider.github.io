@@ -2,19 +2,13 @@ window.addEventListener('load', (event) => {
   // Request name from user
   if(document.cookie){
     name = getCookie("name");
-    document.getElementById("name").innerHTML = "שלום " + name;
-  } else {
-    const name = prompt("הכניסו את שמכם המלא", "");
     if(name){
       document.getElementById("name").innerHTML = "שלום " + name;
-
-      const d = new Date();
-      d.setTime(d.getTime() + (60*60*1000));
-      let expires = "expires="+ d.toUTCString();
-      document.cookie = "name=" + name + ";" + expires + ";";
     } else {
-      document.getElementById("name").remove()
+      setName();
     }
+  } else {
+    setName();
   }
 
   // Add to tds the function of coloring
@@ -51,4 +45,18 @@ function getCookie(cname) {
     }
   }
   return "";
+}
+
+function setName(){
+  const name = prompt("הכניסו את שמכם המלא", "");
+  if(name){
+    document.getElementById("name").innerHTML = "שלום " + name;
+
+    const d = new Date();
+    d.setTime(d.getTime() + (60*60*1000));
+    let expires = "expires="+ d.toUTCString();
+    document.cookie = "name=" + name + ";" + expires + ";";
+  } else {
+    document.getElementById("name").remove()
+  }
 }

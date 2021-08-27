@@ -4,10 +4,15 @@ window.addEventListener('load', (event) => {
   for(td of tds){
     td.addEventListener('click', function(e){
       tdToMark = e.srcElement.closest("td");
-      if(tdToMark.className){
-        tdToMark.className = "";
-      } else if (tdToMark.innerHTML != ""){
-        tdToMark.className = "checked";
+
+      if(tdToMark.innerHTML != ""){
+        if(tdToMark.className == "shipur"){
+          tdToMark.className = "shimur";
+        } else if (tdToMark.className == "shimur") {
+          tdToMark.className = "";
+        } else {
+          tdToMark.className = "shipur";
+        }
       }
     });
   }

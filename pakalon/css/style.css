@@ -14,15 +14,7 @@ body {
 }
 
 .container {
-	/*
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	-webkit-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
-	*/
 	padding-bottom: 15px;
-
 	user-select: none; /* supported by Chrome and Opera */
 	-webkit-user-select: none; /* Safari */
 	-khtml-user-select: none; /* Konqueror HTML */
@@ -54,24 +46,28 @@ thead th {
 	background-color: #55608f;
 }
 
-tbody tr:hover {
-	background-color: rgba(255, 255, 255, 0.3);
-}
-
 tbody td {
 	position: relative;
 }
 
-tbody td:hover:before {
-	content: "";
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: -9999px;
-	bottom: -9999px;
-	background-color: rgba(255, 255, 255, 0.2);
-	z-index: -1;
+
+@media only screen and (min-width: 1025px) {
+	tbody tr:hover {
+		background-color: rgba(255, 255, 255, 0.3);
+	}
+
+	tbody td:hover:before {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: -9999px;
+		bottom: -9999px;
+		background-color: rgba(255, 255, 255, 0.2);
+		z-index: -1;
+	}
 }
+
 
 .titles {
 	text-align: center;
@@ -98,8 +94,15 @@ img {
 	float: left;
 }
 
-.checked {
-	background-color: rgba(0,0,0,0.05);
+.shimur {
+	background-color: rgba(0,128,0,0.4);
+	-moz-box-shadow: inset 0 0 4px #000000;
+	-webkit-box-shadow: inset 0 0 4px #000000;
+	box-shadow: inset 0 0 4px #000000;
+}
+
+.shipur {
+	background-color: rgba(255,0,0,0.4);
 	-moz-box-shadow: inset 0 0 4px #000000;
 	-webkit-box-shadow: inset 0 0 4px #000000;
 	box-shadow: inset 0 0 4px #000000;

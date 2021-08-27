@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+html {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	background: -webkit-linear-gradient(90deg, #49a09d, #5f2c82);
+	background: linear-gradient(90deg, #49a09d, #5f2c82);
+	font-family: 'Rubik', sans-serif;
+	font-weight: 100;
+	direction: rtl;
+}
+
+.container {
+	/*
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	*/
+	padding-bottom: 15px;
+}
+
+table {
+	width: 800px;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+	direction: rtl;
+	margin: auto;
+}
+
+th,
+td {
+	padding: 15px;
+	background-color: rgba(255, 255, 255, 0.2);
+	color: #fff;
+}
+
+td{
+	text-align: center;
+}
+
+thead th {
+	background-color: #55608f;
+}
+
+tbody tr:hover {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+tbody td {
+	position: relative;
+}
+
+tbody td:hover:before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: -9999px;
+	bottom: -9999px;
+	background-color: rgba(255, 255, 255, 0.2);
+	z-index: -1;
+}
+
+.titles {
+	text-align: center;
+	color: white;
+}
+
+.credit {
+	text-align: center;
+	color: white;
+	padding-bottom: 30px;
+}
+
+.logos {
+	padding-top: 15px;
+	width: 800px;
+	margin: auto;
+}
+
+img {
+	width: 85px;
+}
+
+.erez {
+	float: left;
+}

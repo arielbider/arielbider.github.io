@@ -162,6 +162,11 @@ body,
   vertical-align: bottom;
 }
 
+.popup-button:hover {
+  background-image: url("../img/plan-hover.png");
+  background-repeat: no-repeat;
+}
+
 .button-text {
   font-size: 16px;
 }
@@ -213,8 +218,9 @@ body,
   margin-right: 5%;
 }
 
-.fa-plus-square, .fa-plus-square {
+.fa-plus-square, .fa-minus-square {
   display: inline-block;
+  margin-left: 5px;
 }
 
 .fa-plus-square {
@@ -455,6 +461,21 @@ input:checked+.slider:before {
   display: none;
 }
 
+.gauges-div-show {
+  display: flex;
+}
+
+@media only screen and (max-width: 952px) {
+  .gauge {
+    height: 175px;
+  }
+
+  .gauges-div-show {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .wrapper {
   position: relative;
   width: 200px;
@@ -465,16 +486,6 @@ input:checked+.slider:before {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-@media only screen and (max-width: 952px) {
-  .gauge {
-    height: 175px;
-  }
-
-  .gauges-div {
-    display: block;
-  }
 }
 
 #scrathpad {
@@ -507,4 +518,27 @@ input:checked+.slider:before {
   margin-right: 35px;
   cursor: pointer;
   width: 60px
+}
+
+#news {
+  text-align: center;
+}
+
+#news p{
+  text-align: right;
+}
+
+.contact-me img{
+  width: 125px;
+  margin: 10px;
+}
+
+.contact-me a{
+  text-decoration: none;
+}
+
+.seperating-line{
+  width: 75%;
+  margin: auto;
+  border: 2px solid dimgrey;
 }

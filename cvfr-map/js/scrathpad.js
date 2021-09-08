@@ -12,7 +12,7 @@ function resizeCanvas() {
 	canvas.width = canvas.offsetWidth * ratio;
 	canvas.height = canvas.offsetHeight * ratio;
 	canvas.getContext("2d").scale(ratio, ratio);
-	
+
 	signaturePad.fromData(data);
 	// signaturePad.clear(); //otherwise isEmpty() might return incorrect value
 }
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById("scrathpad-wrapper").style.display = "none";
 });
 
-document.getElementsByClassName("fa-times-circle")[0].onclick = function() {
+document.querySelector(".fa-times-circle").onclick = function() {
 	document.getElementById("mapid").style.display = "block";
 	document.getElementById("scrathpad-wrapper").style.display = "none";
 }

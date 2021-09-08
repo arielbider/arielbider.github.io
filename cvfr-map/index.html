@@ -70,6 +70,9 @@
         <li>
           <a href="#settings" role="tab" title="הגדרות"><i class="fa fa-cog"></i></a>
         </li>
+        <li>
+          <a href="#news" role="tab" title="מה חדש?"><i class="far fa-newspaper"></i></a>
+        </li>
       </ul>
     </div>
 
@@ -91,7 +94,7 @@
         <h3>כיצד לבחור שדות תעופה?</h3>
         <p>גם כאן כמו בתכנון נתיב, ניתן לנווט למיקום שדה התעופה במפת ה-CVFR וללחוץ על הנקודה. בחלון שיפתח ניתן לבחור בבחירה כשדה המראה או נחיתה. לחילופין, ניתן לכתוב את קוד ICAO (4 אותיות) של שדה התעופה.</p>
         <h3>תודות</h3>
-        <p>תודה מיוחדת לבר רודוי שעזר עם המרת המפה ולימד אותי כיצד להפוך את הדפיות לשמישות כאן במערכת<br>
+        <p>תודה מיוחדת לבר רודוי שעזר עם המרת המפה ולימד אותי כיצד להפוך את הדפיות לשמישות כאן במערכת.<br>
           תודה גם לכל המשתמשים במערכת, זה לא מובן מאליו.</p>
       </div>
 
@@ -101,7 +104,7 @@
           <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
         </h1>
 
-        <div class="main-map-button" onclick="removeAll()">סגור את כל הדפיות</div>
+        <div class="main-map-button">סגור את כל הדפיות</div>
         <div id="inner-sidebar" class="inner-sidebar">
         </div>
       </div>
@@ -174,7 +177,7 @@
           </div>
 
           <div>על מנת שתוכל/י להתחבר ממכשיר אחר, אנא לחץ כאן:</div>
-          <a href="http://cvfrmap.ga/cvfr-map" class="http">מעבר ל-HTTP</a>
+          <a href="http://cvfrmap.ga/cvfr-map-dev" class="http">מעבר ל-HTTP</a>
           <br>
           <a href="server/CVFRMAP-SERVER.zip" class="server-download">להורדת הסרבר לחצו כאן</a>
         </div>
@@ -216,9 +219,37 @@
             </label>
             <i class="far fa-question-circle"></i>
             <br>
-            <p>חלונית קטנה עם תצוגת נתוני המטוס בזמן אמת (עובד רק בעת חיבור לסימולטור).</p>
+            <p>לחיצה על כפתור זה, תפתח מסך מצד שמאל למטה שיאפשר לכם לראות את נתוני הטיסה שלכם בעת חיבור לסימולטור. שימו לב שישנו שיהוי קל בין הסימולטור לבין העדכון במפה.</p>
           </div>
 
+        </div>
+      </div>
+
+      <div class="leaflet-sidebar-pane" id="news">
+        <h1 class="leaflet-sidebar-header">
+          מה חדש?
+          <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+        </h1>
+        <h3>גרסה 2.3</h3>
+        <p>עדכון זה בא בעיקר מתחת למכסה המנוע; שינינו חלק מהקוד לתצורה יותר טובה להרצה בדפדפן.<br>
+          1. הוספנו כפתור לכיבוי והדלקת פאנל נתוני טיסה.<br>
+          2. הוספנו את דף "מה חדש?", לעדכונים על הגרסאות החדשות ומה הוספנו, הורדנו או תיקנו.<br>
+          3. איחדנו בין גרסאת הפיתוח לגרסה הרגילה, כך שתוכלו להשתמש תמיד בגרסה הכי טובה של האתר.<br>
+          4. שינינו חלק מהקוד כך שירוץ אצלכם יותר טוב בטלפון או במחשב.<br>
+          5. עיצבנו אייקון חדש ומגניב למערכת.
+        </p>
+        <div class="seperating-line"></div>
+        <h4>צרו קשר:</h4>
+        <div class="contact-me">
+          <a href="https://github.com/arielbider/arielbider.github.io">
+            <img src="img/github.png">
+          </a>
+          <a href="https://www.facebook.com/arik.bider/">
+            <img src="img/facebook.png">
+          </a>
+          <a href="https://www.linkedin.com/in/ariel-bider-7aba86147/">
+            <img src="img/linkedin.png">
+          </a>
         </div>
       </div>
     </div>

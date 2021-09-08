@@ -30,7 +30,7 @@ map.on('popupopen', function(source) {
 	}
 });
 
-var cvfr_map_layer = L.tileLayer('../cvfr-map-dev/map/{z}/{x}/{y}.png', {
+var cvfr_map_layer = L.tileLayer('map/{z}/{x}/{y}.png', {
 		attribution: 'מקור: &copy; פמ"ת פנים ארצי, רת"א | עיבוד: בר רודוי ואריאל בידר',
 		minZoom: 8,
 		maxZoom: 14
@@ -95,14 +95,27 @@ for (let waypoint_key in cvfr_waypoints) {
 		iconPic = "map_pins/by_request.png";
 	}
 
-	let name_marker_html = `<img src="${iconPic}" class="waypoint_icon"><br>${waypoint["name"]} - ${waypoint["CODE"]}`;
+	// Create hosting Div for point icon in Satallite map
+	let name_marker_html = document.createElement('div');
 
+	// Append the logo of the point (Airport, Must report to ATC, etc)
+	let name_marker_img = document.createElement('img');
+	name_marker_img.src = iconPic;
+	name_marker_img.className = "waypoint_icon";
+	name_marker_html.appendChild(name_marker_img);
+
+	// Append the name of the point and its code
+	name_marker_html.appendChild(document.createElement('br'));
+	name_marker_text = document.createTextNode(waypoint.name + ' - ' + waypoint.CODE);
+	name_marker_html.appendChild(name_marker_text);
+
+	// Create the marker on the assigned layer for all of this type markers
 	let satellite_layer_waypoint_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
 		icon: new L.DivIcon({
 			iconSize: [150, 150],
 			iconAnchor: [75, 40],
 			className: "waypoint_name",
-			html: name_marker_html
+			html: name_marker_html.innerHTML
 		})
 	}).addTo(cvfr_points_names_layer);
 
@@ -114,24 +127,82 @@ for (let waypoint_key in cvfr_waypoints) {
 				className: 'waypoint-marker',
 			})
 		}).addTo(waypoints_layer);
-		let markerHtml = `<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
-                    <div>
-                      <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 1)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-                      <span class="button-text">הוסף לנתיב</span>
-                    </div>
-                    <div>
-                      <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-                      <span class="button-text">קבע כשדה המראה</span>
-                    </div>
-                    <div>
-                      <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-                      <span class="button-text">קבע כשדה נחיתה</span>
-                    </div>
-                  </div>`;
-		curr_marker.bindPopup(markerHtml, {
+
+		let markerHTML = `<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
+		                    <div>
+		                      <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 1)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+		                      <span class="button-text">הוסף לנתיב</span>
+		                    </div>
+		                    <div>
+		                      <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+		                      <span class="button-text">קבע כשדה המראה</span>
+		                    </div>
+		                    <div>
+		                      <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${waypoint["CODE"]}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+		                      <span class="button-text">קבע כשדה נחיתה</span>
+		                    </div>
+                  		</div>`;
+
+
+		curr_marker.bindPopup(markerHTML, {
 			minWidth: 170
 		});
-		satellite_layer_waypoint_marker.bindPopup(markerHtml);
+		satellite_layer_waypoint_marker.bindPopup(markerHTML);
+
+		// let markerHTML = document.createElement('div');
+		// markerHTML.className = "waypoint_popup";
+		// markerHTML.id = waypoint.CODE + '-div';
+		//
+		// let title = document.createElement('div');
+		// title.className = 'airport-name';
+		// let titleText = document.createTextNode(waypoint.name + ' - ' + waypoint.CODE);
+		// title.appendChild(titleText);
+		// markerHTML.appendChild(title);
+		//
+		// let addToPlanDiv = document.createElement('div');
+		// let addToImg = document.createElement('img');
+		// addToImg.dataset.waypoint = waypoint.CODE;
+		// addToImg.className = 'popup-button';
+		// addToImg.src = 'img/plan-normal.png';
+		// addToImg.onclick = "addWaypoint(this.dataset.waypoint, 1)";
+		// addToPlanDiv.appendChild(addToImg);
+		// let addToText = document.createElement('span');
+		// addToText.className = 'button-text';
+		// addToText.appendChild(document.createTextNode('הוסף לנתיב'));
+		// addToPlanDiv.appendChild(addToText);
+		// markerHTML.appendChild(addToPlanDiv);
+		// //
+		// // let addAsDepAirport = document.createElement('div');
+		// // let addAsDepImg = document.createElement('img');
+		// // addAsDepImg.dataset.waypoint = waypoint.CODE;
+		// // addAsDepImg.className = 'popup-button';
+		// // addAsDepImg.onclick = 'setAsDeparture(this.dataset.airport)';
+		// // addAsDepAirport.appendChild(addAsDepImg);
+		// // let addAsDepText = document.createElement('span');
+		// // addAsDepText.className = 'button-text';
+		// // addAsDepText.appendChild(document.createTextNode('קבע כשדה המראה'));
+		// // addAsDepAirport.appendChild(addAsDepText);
+		// // markerHTML.appendChild(addAsDepAirport);
+		// //
+		// // let addAsArrAirport = document.createElement('div');
+		// // let addAsArrImg = document.createElement('img');
+		// // addAsArrImg.dataset.waypoint = waypoint.CODE;
+		// // addAsArrImg.className = 'popup-button';
+		// // addAsArrImg.addEventListener('click', setAsArrival(this.dataset.airport));
+		// // addAsArrAirport.appendChild(addAsArrImg);
+		// // let addAsArrText = document.createElement('span');
+		// // addAsArrText.className = 'button-text';
+		// // addAsArrText.appendChild(document.createTextNode('קבע כשדה נחיתה'));
+		// // addAsArrAirport.appendChild(addAsArrText);
+		// // markerHTML.appendChild(addAsArrAirport);
+		// //
+		// console.log(markerHTML.innerHTML);
+		//
+		// curr_marker.bindPopup(markerHTML.innerHTML, {
+		// 	minWidth: 170
+		// });
+		// satellite_layer_waypoint_marker.bindPopup(markerHTML.innerHTML);
+
 	} else {
 		let curr_marker = L.marker([waypoint["LAT"], waypoint["LONG"]], {
 			icon: new L.DivIcon({
@@ -140,14 +211,14 @@ for (let waypoint_key in cvfr_waypoints) {
 				className: 'waypoint-marker',
 			})
 		}).addTo(waypoints_layer);
-		let markerHtml = `<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
+		let markerHTML = `<div class="waypoint_popup" id="${waypoint["CODE"]}-div"><div class="airport-name">${waypoint["name"]} - ${waypoint["CODE"]}</div>
                     <div>
                       <img src="img/plan-normal.png" data-waypoint="${waypoint["CODE"]}" class="popup-button" onclick="addWaypoint(this.dataset.waypoint, 0)" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
                       <span class="button-text">הוסף לנתיב</span>
                     </div>
                   </div>`
-		curr_marker.bindPopup(markerHtml);
-		satellite_layer_waypoint_marker.bindPopup(markerHtml);
+		curr_marker.bindPopup(markerHTML);
+		satellite_layer_waypoint_marker.bindPopup(markerHTML);
 	}
 }
 

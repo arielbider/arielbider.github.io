@@ -3,23 +3,20 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function openCloseGaugesWindow(button){
-
 	window_isOpen = button.srcElement.checked;
-
+	let gaugesDiv = document.querySelector(".gauges-div");
 	if (window_isOpen) {
-		 document.getElementsByClassName("gauges-div")[0].style.display = "flex";
+		 gaugesDiv.classList.add("gauges-div-show");
 	} else {
-		 document.getElementsByClassName("gauges-div")[0].style.display = "none";
+		 gaugesDiv.classList.remove("gauges-div-show");
 	}
 
 }
 
-
-
 L.Control.Gauges = L.Control.extend({
 	onAdd: function(map) {
 		var div = L.DomUtil.create('div');
-		div.className += "gauges-div leaflet-bar leaflet-control";
+		div.classList.add("gauges-div", "leaflet-bar", "leaflet-control");
 		div.innerHTML = document.querySelector(".gauges-div").innerHTML;
 		document.querySelector(".gauges-div").remove();
 		return div;
@@ -35,10 +32,7 @@ L.control.gauges = function(opts) {
 }
 
 L.control.gauges({
-	position: 'bottomleft',
-	style: {
-		className: "leaflet-bar leaflet-control"
-	}
+	position: 'bottomleft'
 }).addTo(map);
 
 var bearing_gauge = new RadialGauge({

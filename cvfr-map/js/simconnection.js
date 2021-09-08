@@ -13,7 +13,7 @@ var focusOnAircraft = false;
 var simURL;
 
 document.getElementById("user-aircraft").addEventListener("click", function() {
-	ipAddress = document.getElementById("ipAddress").value;
+	let ipAddress = document.getElementById("ipAddress").value;
 	if (this.checked) {
 		console.log(!ipAddress);
 		if (ipAddress) {
@@ -24,10 +24,10 @@ document.getElementById("user-aircraft").addEventListener("click", function() {
 		mapControl = L.easyButton('fas fa-location-arrow', function() {
 			if (focusOnAircraft) {
 				focusOnAircraft = false;
-				document.getElementsByClassName("fa-location-arrow")[0].style.color = "black";
+				document.querySelector(".fa-location-arrow").style.color = "black";
 			} else {
 				focusOnAircraft = true;
-				document.getElementsByClassName("fa-location-arrow")[0].style.color = "mediumspringgreen";
+				document.querySelector(".fa-location-arrow").style.color = "mediumspringgreen";
 			}
 		}).addTo(map);
 		getAirplaneFromSim();
@@ -47,11 +47,11 @@ function getAirplaneFromSim() {
 	var con = new XMLHttpRequest();
 	con.onreadystatechange = function() {
 		if (con.readyState == XMLHttpRequest.DONE) {
-			try{
+			try {
 				console.log(con.responseText);
 				let data = JSON.parse(con.responseText);
 				setAircraftData(data);
-			} catch(e){
+			} catch (e) {
 				console.log(e);
 			}
 		}
@@ -62,12 +62,14 @@ function getAirplaneFromSim() {
 
 function setAircraftData(data) {
 	userAircraft.setLatLng([data.latitude, data.longitude]);
-	map.hasLayer(userAircraft) ? userAircraft : userAircraft.addTo(map);
-	document.getElementsByClassName("userAircraft")[0].style.transform = `rotate(${data.heading - 45}deg)`;
+	if (!map.hasLayer(userAircraft)) {
+		userAircraft.addTo(map);
+	}
+	document.querySelector(".userAircraft").style.transform = `rotate(${data.heading - 45}deg)`;
 	if (focusOnAircraft) {
 		map.setView([data.latitude, data.longitude], map.getZoom());
 	}
-	small_altitude.value = data.altitude/10;
+	small_altitude.value = data.altitude / 10;
 	speed_gauge.value = data.ias;
 	big_altitude.value = data.altitude;
 	bearing_gauge.value = data.heading;

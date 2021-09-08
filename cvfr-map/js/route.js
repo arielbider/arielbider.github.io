@@ -1,8 +1,8 @@
 function addWaypoint(id, if_airport) {
-	if (document.getElementById("route").innerHTML == "") {
-		document.getElementById("route").innerHTML = id;
+	if (markerHTMLdocument.getElementById("route").innerText == "") {
+		markerHTMLdocument.getElementById("route").innerText = id;
 	} else {
-		document.getElementById("route").innerHTML += " " + id;
+		markerHTMLdocument.getElementById("route").innerText += " " + id;
 	}
 
 	updatePopup(id, if_airport);
@@ -11,7 +11,7 @@ function addWaypoint(id, if_airport) {
 
 function removeWaypoint(id, if_airport) {
 
-	var route_string = document.getElementById("route").innerHTML;
+	var route_string = markerHTMLdocument.getElementById("route").innerText;
 
 	if (route_string != "") {
 
@@ -25,7 +25,7 @@ function removeWaypoint(id, if_airport) {
 			route_string_as_Array.splice(index, 1);
 		}
 
-		document.getElementById("route").innerHTML = route_string_as_Array.join('');
+		markerHTMLdocument.getElementById("route").innerText = route_string_as_Array.join('');
 		updatePopup(id, if_airport);
 		translateRoute();
 	}
@@ -126,6 +126,9 @@ class routePolyline {
 			}
 		};
 	}
+	getLatLongs() {
+		return this._polyline.getLatLngs();
+	}
 }
 
 var route_polyline = new routePolyline("rgb(255,0,255)");
@@ -146,7 +149,7 @@ function translateRoute() {
 	let route = document.getElementById("route").innerText;
 	route = route.replaceAll(/\r\n|\n|\r/gm, "");
 	route = route.replaceAll(" ", " ");
-	while (route.includes("  ")){
+	while (route.includes("  ")) {
 		route = route.replaceAll("  ", " ");
 		console.log('time: ' + route);
 	}
@@ -154,7 +157,7 @@ function translateRoute() {
 	let departure = document.getElementById("departure").value;
 	departure = departure.replaceAll(" ", "");
 	let arrival = document.getElementById("arrival").value;
-	departure = departure.replaceAll(" ", "");
+	arrival = arrival.replaceAll(" ", "");
 
 	if (route || (departure && arrival)) {
 		let errors = Array();
@@ -264,21 +267,18 @@ function translateRoute() {
 							end_point: curr_code_name,
 						});
 					}
-					console.log("here");
 				}
 			}
 
 		}
 
 		if (errors.length > 0) {
-			let errorString;
+			let errorArray = [];
 			errors.forEach((error, i) => {
-				if (errorString) {
-					errorString += `<br>לא קיים נתיב בין ${error[0]} ו${error[1]}`;
-				} else {
-					errorString = `לא קיים נתיב בין ${error[0]} ו${error[1]}`;
-				}
+				let errorText = 'לא קיים נתיב בין ' + error[0] + ' ו' + error[1];
+				errorArray.push(errorText);
 			});
+			var errorString = errorArray.join('<br>');
 			document.getElementById("routes-errors").innerHTML = errorString;
 		}
 	} else {
@@ -305,7 +305,7 @@ var userMarker = L.Marker.extend({
 });
 
 var userPointsEvent = function(e) {
-	let pointName = `POINT${(userPoints.length+1)}`;
+	let pointName = 'POINT' + (userPoints.length + 1);
 	let customMarker = new userMarker([e.latlng.lat, e.latlng.lng], {
 		name: pointName
 	}).addTo(userPointsLayer).bindPopup(`<div class="waypoint_popup" id="${pointName}-div"><div class="airport-name">${pointName}</div>
@@ -333,7 +333,7 @@ var userPointsEvent = function(e) {
 
 function changeUserPointPermission(button) {
 	route_polyline.allowUserPoints = button.srcElement.checked;
-	let route = document.getElementById("route").innerText;
+	let route = document.getElementById('route').innerText;
 
 	if (route_polyline.allowUserPoints) {
 		map.on('click', userPointsEvent);
@@ -346,7 +346,7 @@ function changeUserPointPermission(button) {
 			route = route.replaceAll(point.name, "");
 		});
 
-		console.log("route " + route);
+		console.log('route ' + route);
 		document.getElementById("route").innerText = route;
 	}
 
@@ -360,13 +360,10 @@ function validateAirport(id) {
 
 	var airport_code = document.getElementById(id).value.toUpperCase();
 
-	if (id == "departure" && ((airport_code.length == 3 && dep.length == 4) || (airport_code.length == 5 && dep.length == 4) || (dep.length - airport_code.length > 1)) && route_polyline._polyline.getLatLngs().length > 0) {
-
+	if (id == "departure" && ((airport_code.length == 3 && dep.length == 4) || (airport_code.length == 5 && dep.length == 4) || (dep.length - airport_code.length > 1)) && route_polyline.getLatLongs().length > 0) {
 		translateRoute();
 		dep = airport_code;
-
-	} else if (id == "arrival" && ((airport_code.length == 3 && arr.length == 4) || (airport_code.length == 5 && arr.length == 4) || (arr.length - airport_code.length > 1)) && route_polyline._polyline.getLatLngs().length > 0) {
-
+	} else if (id == "arrival" && ((airport_code.length == 3 && arr.length == 4) || (airport_code.length == 5 && arr.length == 4) || (arr.length - airport_code.length > 1)) && route_polyline.getLatLongs().length > 0) {
 		translateRoute();
 		arr = airport_code;
 	}
@@ -404,37 +401,37 @@ function setAsArrival(airport_code) {
 }
 
 function updatePopup(airport_code, if_airport) {
-	let route = document.getElementById("route").innerHTML,
-		dep = document.getElementById("departure").value,
-		arr = document.getElementById("arrival").value,
-		marker_info = marker.getContent().split("<div>");
-	marker_info = marker_info[0] + "<div>" + marker_info[1];
-	if (!if_airport) {
-		marker_info = marker_info.split("</div>");
-		marker_info = marker_info[0] + "</div>" + marker_info[1];
-	}
-	if (route.includes(airport_code)) {
-		marker_info += `<div>
-          <img src="img/plan-normal.png" data-waypoint="${airport_code}" class="popup-button" onclick="removeWaypoint(this.dataset.waypoint, ${if_airport})" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-          <span class="button-text">הסר מנתיב</span>
-        </div>`;
-	}
-	if (dep != airport_code && if_airport) {
-		//הוספת כפתור קבע כשדה המראה
-		marker_info += `<div>
-          <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-          <span class="button-text">קבע כשדה המראה</span>
-          </div>`;
-	}
-	if (arr != airport_code && if_airport) {
-		marker_info += `<div>
-          <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-          <span class="button-text">קבע כשדה נחיתה</span>
-        </div>`;
-	}
-
-	marker_info + "</div>";
-	marker.setContent(marker_info);
+	// let route = document.getElementById("route").innerText,
+	// 	dep = document.getElementById("departure").value,
+	// 	arr = document.getElementById("arrival").value,
+	// 	marker_info = marker.getContent().split("<div>");
+	// marker_info = marker_info[0] + "<div>" + marker_info[1];
+	// if (!if_airport) {
+	// 	marker_info = marker_info.split("</div>");
+	// 	marker_info = marker_info[0] + "</div>" + marker_info[1];
+	// }
+	// if (route.includes(airport_code)) {
+	// 	marker_info += `<div>
+  //         <img src="img/plan-normal.png" data-waypoint="${airport_code}" class="popup-button" onclick="removeWaypoint(this.dataset.waypoint, ${if_airport})" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+  //         <span class="button-text">הסר מנתיב</span>
+  //       </div>`;
+	// }
+	// if (dep != airport_code && if_airport) {
+	// 	//הוספת כפתור קבע כשדה המראה
+	// 	marker_info += `<div>
+  //         <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+  //         <span class="button-text">קבע כשדה המראה</span>
+  //         </div>`;
+	// }
+	// if (arr != airport_code && if_airport) {
+	// 	marker_info += `<div>
+  //         <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+  //         <span class="button-text">קבע כשדה נחיתה</span>
+  //       </div>`;
+	// }
+	//
+	// marker_info + "</div>";
+	// marker.setContent(marker_info);
 }
 
 
@@ -445,20 +442,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function calculateTime() {
 	let airspeed = document.getElementById("speed").value;
-	airspeed.length > 0 ? airspeed : airspeed = document.getElementById("speed").placeholder;
+	if (!airspeed) {
+		airspeed = document.getElementById("speed").placeholder;
+	}
 	console.log(airspeed);
 
 	let departureTime = document.getElementById("departure-time").value;
 
-	if (departureTime == "") {
-		document.getElementById("arrival-time").innerHTML = "";
+	if (!departureTime) {
+		document.getElementById("arrival-time").innerText = "";
 		return;
 	}
 
 	departureTime = departureTime.split(":");
 	departureTime[0] = parseInt(departureTime[0]), departureTime[1] = parseInt(departureTime[1]);
 
-	let allPoints = route_polyline._polyline.getLatLngs();
+	let allPoints = route_polyline.getLatLongs();
 	let distance = 0;
 
 	for (i = 0; i < allPoints.length - 1; i++) {
@@ -472,7 +471,8 @@ function calculateTime() {
 
 	departureTime[1] += Math.round((time % 1) * 60);
 
-	departureTime[1] < 10 ? departureTime[1] = "0" + departureTime[1] : departureTime[1];
-
-	document.getElementById("arrival-time").innerHTML = departureTime[0] + ":" + departureTime[1];
+	if (departureTime[1] < 10) {
+		departureTime[1] = "0" + departureTime[1];
+	}
+	document.getElementById("arrival-time").innerText = departureTime[0] + ":" + departureTime[1];
 }

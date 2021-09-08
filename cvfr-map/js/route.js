@@ -1,8 +1,8 @@
 function addWaypoint(id, if_airport) {
-	if (markerHTMLdocument.getElementById("route").innerText == "") {
-		markerHTMLdocument.getElementById("route").innerText = id;
+	if (document.getElementById("route").innerText == "") {
+		document.getElementById("route").innerText = id;
 	} else {
-		markerHTMLdocument.getElementById("route").innerText += " " + id;
+		document.getElementById("route").innerText += " " + id;
 	}
 
 	updatePopup(id, if_airport);
@@ -11,7 +11,7 @@ function addWaypoint(id, if_airport) {
 
 function removeWaypoint(id, if_airport) {
 
-	var route_string = markerHTMLdocument.getElementById("route").innerText;
+	var route_string = document.getElementById("route").innerText;
 
 	if (route_string != "") {
 
@@ -25,7 +25,7 @@ function removeWaypoint(id, if_airport) {
 			route_string_as_Array.splice(index, 1);
 		}
 
-		markerHTMLdocument.getElementById("route").innerText = route_string_as_Array.join('');
+		document.getElementById("route").innerText = route_string_as_Array.join('');
 		updatePopup(id, if_airport);
 		translateRoute();
 	}
@@ -401,37 +401,37 @@ function setAsArrival(airport_code) {
 }
 
 function updatePopup(airport_code, if_airport) {
-	// let route = document.getElementById("route").innerText,
-	// 	dep = document.getElementById("departure").value,
-	// 	arr = document.getElementById("arrival").value,
-	// 	marker_info = marker.getContent().split("<div>");
-	// marker_info = marker_info[0] + "<div>" + marker_info[1];
-	// if (!if_airport) {
-	// 	marker_info = marker_info.split("</div>");
-	// 	marker_info = marker_info[0] + "</div>" + marker_info[1];
-	// }
-	// if (route.includes(airport_code)) {
-	// 	marker_info += `<div>
-  //         <img src="img/plan-normal.png" data-waypoint="${airport_code}" class="popup-button" onclick="removeWaypoint(this.dataset.waypoint, ${if_airport})" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-  //         <span class="button-text">הסר מנתיב</span>
-  //       </div>`;
-	// }
-	// if (dep != airport_code && if_airport) {
-	// 	//הוספת כפתור קבע כשדה המראה
-	// 	marker_info += `<div>
-  //         <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-  //         <span class="button-text">קבע כשדה המראה</span>
-  //         </div>`;
-	// }
-	// if (arr != airport_code && if_airport) {
-	// 	marker_info += `<div>
-  //         <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
-  //         <span class="button-text">קבע כשדה נחיתה</span>
-  //       </div>`;
-	// }
-	//
-	// marker_info + "</div>";
-	// marker.setContent(marker_info);
+	let route = document.getElementById("route").innerText,
+		dep = document.getElementById("departure").value,
+		arr = document.getElementById("arrival").value,
+		marker_info = marker.getContent().split("<div>");
+	marker_info = marker_info[0] + "<div>" + marker_info[1];
+	if (!if_airport) {
+		marker_info = marker_info.split("</div>");
+		marker_info = marker_info[0] + "</div>" + marker_info[1];
+	}
+	if (route.includes(airport_code)) {
+		marker_info += `<div>
+          <img src="img/plan-normal.png" data-waypoint="${airport_code}" class="popup-button" onclick="removeWaypoint(this.dataset.waypoint, ${if_airport})" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+          <span class="button-text">הסר מנתיב</span>
+        </div>`;
+	}
+	if (dep != airport_code && if_airport) {
+		//הוספת כפתור קבע כשדה המראה
+		marker_info += `<div>
+          <img src="img/plan-normal.png" onclick="setAsDeparture(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+          <span class="button-text">קבע כשדה המראה</span>
+          </div>`;
+	}
+	if (arr != airport_code && if_airport) {
+		marker_info += `<div>
+          <img src="img/plan-normal.png" onclick="setAsArrival(this.dataset.airport)" data-airport="${airport_code}" class="popup-button" onmouseover="this.src='img/plan-hover.png'" onmouseout="this.src='img/plan-normal.png'">
+          <span class="button-text">קבע כשדה נחיתה</span>
+        </div>`;
+	}
+
+	marker_info + "</div>";
+	marker.setContent(marker_info);
 }
 
 
